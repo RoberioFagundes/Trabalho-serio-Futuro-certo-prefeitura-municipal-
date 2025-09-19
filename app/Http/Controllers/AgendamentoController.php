@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Pessoa;
 use App\Models\EnderecoCidadao;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class AgendamentoController extends Controller
@@ -25,7 +26,8 @@ class AgendamentoController extends Controller
             $whenQuery->where('nome', 'like', '%' . request()->nome . '%');
         })->get();
 
-        return view('secretaria.sistema.agendamento.index', compact('agendamentos','Pessoa'));
+        return view('secretaria.sistema.agendamento.index', 
+        compact('agendamentos','Pessoa'))->with('sucesso-agendamento',"Agendamento Cadastro com Sucesso");
     }
 
   
@@ -101,9 +103,17 @@ class AgendamentoController extends Controller
 
         $agendamento->save();
 
+        $agendamentos = Agendamento::orderBy('data_hora')->paginate(10);
+
+        
+        $Pessoa = Pessoa::when(request()->has('nome'), function ($whenQuery) {
+            $whenQuery->where('nome', 'like', '%' . request()->nome . '%');
+        })->get();
 
 
-        return redirect()->route('agendamentos.index')->with('error', 'An error occurred while processing your request.');
+        return redirect()
+        ->route('agendamentos.index')
+        ->with('sucesso_agendamento', 'Agendamento cadastrado com sucesso!');
      
     }
 
@@ -150,5 +160,17 @@ class AgendamentoController extends Controller
         //
         $agendamento->delete();
         return redirect()->route('agendamentos.index');
+    }
+
+    public function gerar($id)
+    {
+        // Busca o agendamento
+        $agendamento = Agendamento::with('pessoa')->findOrFail($id);
+
+        // Gera o PDF com a view
+        $pdf = Pdf::loadView('pdf.protocolo', compact('agendamento'));
+
+        // Faz o download
+        return $pdf->download('protocolo-'.$agendamento->id.'.pdf');
     }
 }

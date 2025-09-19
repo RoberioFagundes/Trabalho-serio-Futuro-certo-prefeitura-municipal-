@@ -105,9 +105,17 @@
                                             <input type="submit" class="btn btn-primary mx-2" value="Pesquisar">
                                         </form>
                                     </div>
+
                                     <h5 class="card-title mb-3">Lista de Agendamentos</h5>
+                                    <a href="{{ route('agendamentos.create') }}"
+                                        class="btn btn-success btn-sm w-100 card-title mb-3">Novo Agendamento</a>
                                     <div class="table-responsive">
                                         <table class="table table-striped table-hover align-middle">
+                                            @if (session('sucesso_agendamento'))
+                                                <div class="alert alert-success">
+                                                    {{ session('sucesso_agendamento') }}
+                                                </div>
+                                            @endif
                                             <thead class="table-dark">
                                                 <tr>
                                                     <th>Nome</th>
@@ -118,23 +126,26 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                              @foreach ($agendamentos as $agend )
-                                              <tr>
-                                                  <td>{{$agend->pessoa->nome}}</td>
-                                                  <td>{{$agend->pessoa->telefone}}</td>
-                                                  <td>{{$agend->data_hora}}</td>
-                                                  <td>{{$agend->hora}}</td>
-                                                  <td><button class="btn btn-danger btn-sm w-100">Gerar
-                                                          protocolo</button></td>
-                                                  <td><button class="btn btn-success btn-sm w-100">Adicionar na
-                                                          fila</button></td>
-                                                  <td><button
-                                                          class="btn btn-warning btn-sm w-100">Re-agendar</button>
-                                                  </td>
-                                                  <td><button class="btn btn-danger btn-sm w-100">Finalizar
-                                                          Agendamento</button></td>
-                                              </tr>
-                                              @endforeach
+                                                @foreach ($agendamentos as $agend)
+                                                    <tr>
+                                                        <td>{{ $agend->pessoa->nome }}</td>
+                                                        <td>{{ $agend->pessoa->telefone }}</td>
+                                                        <td>{{ $agend->data_hora }}</td>
+                                                        <td>{{ $agend->hora }}</td>
+                                                        <td> <a href="{{ route('protocolo.pdf', $agend->id) }}"
+                                                                class="btn btn-danger btn-sm w-100" target="_blank">
+                                                                Gerar protocolo (PDF)
+                                                            </a></td>
+                                                        <td><button class="btn btn-success btn-sm w-100">
+                                                                Fila</button></td>
+                                                        <td><button
+                                                                class="btn btn-warning btn-sm w-100">Editar</button>
+                                                        </td>
+                                                        <td><button
+                                                                class="btn btn-danger btn-sm w-100">Eliminar</button>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>

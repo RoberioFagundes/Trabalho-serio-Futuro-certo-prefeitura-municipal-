@@ -17,6 +17,7 @@ use App\Http\Controllers\PessoaAtendidaController;
 use App\Http\Controllers\PessoaController;
 use App\Http\Controllers\ReAgendamentoController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+
 use App\Models\User;
 
 Route::get('/', function () {
@@ -90,6 +91,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('pessoaatendidas', PessoaAtendidaController::class)->names('pessoaatendidas');
     Route::resource('pessoas', PessoaController::class)->names('pessoas');
     Route::resource('reagendamentos', ReAgendamentoController::class)->names('reagendamentos');
+    Route::get('/protocolo/{id}/pdf', [PDFController::class, 'gerar'])->name('protocolo.pdf');
+    
 });
 
 require __DIR__.'/auth.php';
