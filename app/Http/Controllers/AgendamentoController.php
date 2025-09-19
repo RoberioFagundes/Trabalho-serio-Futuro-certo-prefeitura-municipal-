@@ -167,8 +167,11 @@ class AgendamentoController extends Controller
         // Busca o agendamento
         $agendamento = Agendamento::with('pessoa')->findOrFail($id);
 
-        // Gera o PDF com a view
-        $pdf = Pdf::loadView('pdf.protocolo', compact('agendamento'));
+         $pdf = PDF::loadView('pdf.protocolo', [
+            'agendamento'
+            => $agendamento
+            
+        ])->setPaper('a4', 'portrait')->setOptions(['defaultFont' => 'sans-serif']);
 
         // Faz o download
         return $pdf->download('protocolo-'.$agendamento->id.'.pdf');

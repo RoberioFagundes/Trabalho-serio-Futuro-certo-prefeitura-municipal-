@@ -24,6 +24,7 @@ class FilaController extends Controller
     public function create()
     {
         //
+        
     }
 
     /**
