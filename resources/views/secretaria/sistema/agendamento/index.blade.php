@@ -136,7 +136,7 @@
                                                                 class="btn btn-danger btn-sm w-100" target="_blank">
                                                                 Gerar protocolo (PDF)
                                                             </a></td>
-                                                        <td><a href="{{route('filas.create')}}" class="btn btn-success btn-sm w-100">
+                                                        <td><a href="{{route('adicionando-fila',['id'=>$agend->id])}}" class="btn btn-success btn-sm w-100">
                                                                 Fila</a></td>
                                                         <td><button
                                                                 class="btn btn-warning btn-sm w-100">Editar</button>

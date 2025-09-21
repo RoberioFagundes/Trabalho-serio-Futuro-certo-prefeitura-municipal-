@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Agendamento;
 use App\Http\Controllers\Controller;
+use App\Models\Fila;
 use Illuminate\Http\Request;
 use App\Models\Pessoa;
 use App\Models\EnderecoCidadao;
@@ -175,5 +176,15 @@ class AgendamentoController extends Controller
 
         // Faz o download
         return $pdf->download('protocolo-'.$agendamento->id.'.pdf');
+    }
+
+    public function adicionandoFila($id)
+    {
+        $agendamentoCidadao = Agendamento::find($id);
+
+        // dd($agendamentoCidadao);
+
+        
+        return view('secretaria.sistema.fila.create', compact('agendamentoCidadao'));
     }
 }

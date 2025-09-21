@@ -93,6 +93,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('reagendamentos', ReAgendamentoController::class)->names('reagendamentos');
     Route::get('/protocolo/{id}/pdf', [PDFController::class, 'gerar'])->name('protocolo.pdf');
     
+    Route::get('/adicionando-fila/{id}', [AgendamentoController::class, 'adicionandoFila'])->middleware(['auth'])->name('adicionando-fila');
+    
 });
 
 require __DIR__.'/auth.php';

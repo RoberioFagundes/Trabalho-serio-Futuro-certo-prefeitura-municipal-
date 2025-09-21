@@ -10,6 +10,7 @@ class Fila extends Model
     protected $fillable = [
         'nome',
         'descricao',
+        'agendamento_id'
     ];
 
     public function atendimentos()

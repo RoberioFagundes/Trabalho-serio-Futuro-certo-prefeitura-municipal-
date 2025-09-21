@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('nome');
             $table->string('descricao')->nullable();
-            $table->integer('numero')->default(0);
+            $table->integer('numero')->default(1);
             $table->string('preferencia'); // 'ativa', 'inativa', etc.
             $table->string('motivo_preferencia')->nullable();
-            $table->integer('qtd_pessoas')->default(0);
+            $table->integer('qtd_pessoas')->default(1);
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')
             ->onDelete('cascade')->onUpdate('cascade');
@@ -26,6 +26,7 @@ return new class extends Migration
             $table->foreign('agendamento_id')->references('id')->on('agendamentos')
             ->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
+            //2025_09_17_111106_create_filas_table.php
         });
     }
 

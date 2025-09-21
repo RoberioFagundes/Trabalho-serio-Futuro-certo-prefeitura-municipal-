@@ -15,7 +15,7 @@ class FilaController extends Controller
     {
         //
         $filas = Fila::all();
-        return view('filas.index', compact('filas'));
+        return view('secretaria.sistema.fila.index', compact('filas'));
     }
 
     /**
@@ -24,7 +24,8 @@ class FilaController extends Controller
     public function create()
     {
         //
-        
+
+        return view ('secretaria.sistema.fila.create');
     }
 
     /**
@@ -33,6 +34,26 @@ class FilaController extends Controller
     public function store(Request $request)
     {
         //
+        // Conta o total de pessoas já cadastradas (opcional)
+    $totalPessoas = Fila::count();
+
+    // Descobre o último número usado e incrementa +1
+    $ultimoNumero = Fila::max('numero') ?? 0;
+    $proximoNumero = $ultimoNumero + 1;
+
+    $fila = new Fila();
+    $fila->nome = $request->nomeCidadaoFila;
+    $fila->descricao = $request->descricaoCidadaoFila;
+    $fila->numero = $proximoNumero; // número correto (INT)
+    $fila->preferencia = $request->preferencia;
+    $fila->motivo_preferencia=$request->motivo_atendimento_preferencial;
+    $fila->qtd_pessoas = $totalPessoas + 1; // soma +1 pois está entrando mais uma pessoa
+    $fila->user_id = auth()->id();
+    $fila->agendamento_id = $request->agendamento_id;
+    $fila->save();
+
+    return redirect()->route('filas.index')
+                 ->with('success', 'Pessoa adicionada à fila com sucesso!');
     }
 
     /**
