@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nome');
             $table->string('descricao')->nullable();
             $table->integer('numero')->default(1);
-            $table->string('preferencia'); // 'ativa', 'inativa', etc.
+            $table->string('preferencia')->nullable(); // 'ativa', 'inativa', etc.
             $table->string('motivo_preferencia')->nullable();
             $table->integer('qtd_pessoas')->default(1);
             $table->unsignedBigInteger('user_id');

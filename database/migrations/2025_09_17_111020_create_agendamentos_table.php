@@ -26,6 +26,7 @@ return new class extends Migration
         });
     }
 
+    //2025_09_17_111020_create_agendamentos_table.php
     /**
      * Reverse the migrations.
      */

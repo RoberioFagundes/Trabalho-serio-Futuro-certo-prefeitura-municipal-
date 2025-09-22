@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::table('filas', function (Blueprint $table) {
             //
-            if (!Schema::hasColumn('filas', 'agendamento_id')) {
-                $table->unsignedBigInteger('agendamento_id')->nullable();
-                $table->foreign('agendamento_id')->references('id')->on('agendamentos')
-                    ->cascadeOnDelete()->cascadeOnUpdate();
+            if (!Schema::hasColumn('filas', 'preferencia')) {
+                $table->string('preferencia')->nullable();
             }
         });
     }
@@ -28,7 +26,8 @@ return new class extends Migration
     {
         Schema::table('filas', function (Blueprint $table) {
             //
-            $table->dropColumn('agendamento_id');
+
+            $table->dropColumn('preferencia');
         });
     }
 };

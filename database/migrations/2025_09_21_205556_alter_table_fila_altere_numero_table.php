@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::table('filas', function (Blueprint $table) {
             //
-            $table->integer('numero')->default(1);
+            if (!Schema::hasColumn('filas', 'numero')) {
+                $table->integer('nummero')->default(1);
+            }
         });
     }
 

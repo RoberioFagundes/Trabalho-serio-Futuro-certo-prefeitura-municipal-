@@ -92,10 +92,14 @@ Route::middleware('auth')->group(function () {
     Route::resource('pessoas', PessoaController::class)->names('pessoas');
     Route::resource('reagendamentos', ReAgendamentoController::class)->names('reagendamentos');
     Route::get('/protocolo/{id}/pdf', [PDFController::class, 'gerar'])->name('protocolo.pdf');
+
+    // Rota extra para remarcar agendamento
+    Route::put('/agendamentos/{agendamento}/remarcar', [AgendamentoController::class, 'remarcar'])
+    ->name('agendamentos.remarcar');
     
     Route::get('/adicionando-fila/{id}', [AgendamentoController::class, 'adicionandoFila'])->middleware(['auth'])->name('adicionando-fila');
 
-    Route::get('/reagenda/{id}',[AgendamentoController::class, 'reagendar'])->middleware(['auth'])->name('reagendar');
+ 
     
 });
 

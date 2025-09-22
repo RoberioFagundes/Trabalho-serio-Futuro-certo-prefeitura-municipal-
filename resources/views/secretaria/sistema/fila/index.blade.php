@@ -126,10 +126,10 @@
                                             <thead class="table-dark">
                                                 <tr>
                                                     <th>Nome</th>
-                                                    <th>Numero</th>
+                                                    <th>Posição na Fila</th>
                                                     <th>Quantidade de Pessos na fila</th>
                                                     <th>A data que foi agendado</th>
-                                                    <th>A hora que foi agendado</th>
+                                                    <th>Horário de Comparecimento</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -139,7 +139,6 @@
                                                         <td>{{ $fila->numero }}</td>
                                                         <td>{{ $fila->qtd_pessoas }}</td>
                                                         <td>{{ $fila->agendamento->data_hora }}</td>
-                                                        <td>{{ $fila->agendamento->hora }}</td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>

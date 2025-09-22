@@ -24,4 +24,24 @@ class Agendamento extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+       /**
+     * Relacionamento: um agendamento pertence a uma fila
+     */
+    public function fila()
+    {
+        return $this->belongsTo(Fila::class);
+    }
+
+    /**
+     * Relacionamento: um agendamento possui vários históricos de remarcação
+     */
+   
+
+     // Relacionamento com o histórico de remarcações
+    public function historicos()
+    {
+        return $this->hasMany(AgendamentoHistory::class);
+    }
+
 }

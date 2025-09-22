@@ -15,9 +15,9 @@
                         <div class="card-body">
                             <div class="row g-3">
 
-                                <input type="text" name="agendamento_id" value="{{$agendamentoCidadao->id}}">
+                                <input type="hidden" name="agendamento_id" value="{{$agendamentoCidadao->id}}">
                                 <!-- Nome -->
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 col-md-12">
                                     <label for="nome" class="form-label fw-bold">Nome:</label>
                                     <input type="text" name="nomeCidadaoFila" class="form-control"
                                         value="{{ $agendamentoCidadao->pessoa->nome }}" id="nome"
@@ -25,16 +25,16 @@
                                 </div>
 
                                 <!-- Número de Protocolo -->
-                                <div class="col-12 col-md-6">
-                                    <label for="numeroProcolo" class="form-label fw-bold">Número de Protocolo:</label>
-                                    <input type="text" name="numeroProcolo" value="{{ $agendamentoCidadao->id }}"
+                                <div class="col-12 col-md-12">
+                                    <label for="numeroProcolo" class="form-label fw-bold">Posição na fila:</label>
+                                    <input type="text" name="numeroProcolo" value="{{ $agendamentoCidadao->id }}ª posição da fila"
                                         class="form-control" id="numeroProcolo" placeholder="Digite o número de protocolo"
                                         required>
                                 </div>
 
                               
 
-                                <div class="orm-label fw-bold">
+                                {{-- <div class="orm-label fw-bold">
                                     <label for="observacoes"  class="form-label fw-bold">Atendimento Preferencial
                                     </label><br>
                                     <select class="col-12 col-md-6" name="preferencia">
@@ -50,7 +50,7 @@
                                     <textarea name="motivo_atendimento_preferencial" class="col-12 col-md-6">
                                 
                                 </textarea>
-                                </div>
+                                </div> --}}
 
 
                             </div>

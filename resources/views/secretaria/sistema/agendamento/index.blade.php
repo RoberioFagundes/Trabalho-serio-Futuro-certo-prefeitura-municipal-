@@ -142,8 +142,8 @@
                                                             </a>
                                                         </td>
                                                         <td>
-                                                            <a href="{{route('reagendamentos.edit',['reagendamento'=>$agend->id])}}" class="btn btn-warning btn-sm w-100">
-                                                                Re-Agendar
+                                                            <a href="{{route('agendamentos.remarcar',['agendamento'=>$agend->id])}}" class="btn btn-warning btn-sm w-100">
+                                                                Remarcação
                                                             </a>
                                                         </td>
                                                         <td><button

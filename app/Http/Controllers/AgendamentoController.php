@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Agendamento;
 use App\Http\Controllers\Controller;
+use App\Models\AgendamentoHistories;
 use App\Models\Fila;
 use Illuminate\Http\Request;
 use App\Models\Pessoa;
@@ -22,16 +23,18 @@ class AgendamentoController extends Controller
         //
         $agendamentos = Agendamento::orderBy('data_hora')->paginate(10);
 
-        
+
         $Pessoa = Pessoa::when(request()->has('nome'), function ($whenQuery) {
             $whenQuery->where('nome', 'like', '%' . request()->nome . '%');
         })->get();
 
-        return view('secretaria.sistema.agendamento.index', 
-        compact('agendamentos','Pessoa'))->with('sucesso-agendamento',"Agendamento Cadastro com Sucesso");
+        return view(
+            'secretaria.sistema.agendamento.index',
+            compact('agendamentos', 'Pessoa')
+        )->with('sucesso-agendamento', "Agendamento Cadastro com Sucesso");
     }
 
-  
+
     public function create()
     {
         //
@@ -99,23 +102,22 @@ class AgendamentoController extends Controller
             $dados['arquivo'] = $path;
             $dados['arquivo_nome'] = $file->getClientOriginalName(); // nome original para exibir
 
-            $agendamento->arquivo=$fileName;
+            $agendamento->arquivo = $fileName;
         }
 
         $agendamento->save();
 
         $agendamentos = Agendamento::orderBy('data_hora')->paginate(10);
 
-        
+
         $Pessoa = Pessoa::when(request()->has('nome'), function ($whenQuery) {
             $whenQuery->where('nome', 'like', '%' . request()->nome . '%');
         })->get();
 
 
         return redirect()
-        ->route('agendamentos.index')
-        ->with('sucesso_agendamento', 'Agendamento cadastrado com sucesso!');
-     
+            ->route('agendamentos.index')
+            ->with('sucesso_agendamento', 'Agendamento cadastrado com sucesso!');
     }
 
     /**
@@ -132,8 +134,12 @@ class AgendamentoController extends Controller
      */
     public function edit(Agendamento $agendamento)
     {
-        //
-       $agendamento = Agendamento::with('historicos', 'user', 'fila')->findOrFail($id);
+        /*
+        Aqui está errado, porque $agendamento já é um modelo do tipo Agendamento.
+        Você está passando ele para findOrFail() que espera um ID.
+        O correto seria:
+        */
+        $agendamento->load(['agendamento_histories.user', 'fila', 'user']);
         return view('secretaria.sistema.Remarcacao.edite', compact('agendamento'));
     }
 
@@ -155,13 +161,47 @@ class AgendamentoController extends Controller
     }
 
     /**
+     * Rota específica para remarcar agendamento
+     */
+    public function remarcar(Request $request, Agendamento $agendamento)
+    {
+        // Valida os dados enviados pelo formulário
+        $validated = $request->validate([
+            'nova_data' => 'required|date',              // A nova data é obrigatória e deve ser uma data válida
+            'nova_hora' => 'required',                   // A nova hora é obrigatória
+            'motivo_remarcacao' => 'nullable|string|max:255', // O motivo é opcional, deve ser string e até 255 caracteres
+        ]);
+
+        // Atualiza os campos principais do agendamento
+        $agendamento->update([
+            'data' => $validated['nova_data'],           // Atualiza a data
+            'hora' => $validated['nova_hora'],          // Atualiza a hora
+            'motivo_remarcacao' => $validated['motivo_remarcacao'], // Atualiza o motivo da remarcação
+        ]);
+
+        // Registra o histórico da remarcação
+        $agendamento->historicos()->create([
+            'nova_data' => $validated['nova_data'],     // Salva a nova data no histórico
+            'nova_hora' => $validated['nova_hora'],     // Salva a nova hora no histórico
+            'motivo' => $validated['motivo_remarcacao'], // Salva o motivo no histórico
+            'user_id' => auth()->id(),                  // Salva o usuário que realizou a remarcação
+        ]);
+
+        // Redireciona de volta para a página de edição do agendamento com uma mensagem de sucesso
+        return redirect()->route('agendamentos.edit', $agendamento->id)
+            ->with('success', 'Agendamento remarcado com sucesso!');
+    }
+
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Agendamento $agendamento)
     {
-        //
         $agendamento->delete();
-        return redirect()->route('agendamentos.index');
+
+        return redirect()->route('agendamentos.index')
+            ->with('success', 'Agendamento excluído com sucesso!');
     }
 
     public function gerar($id)
@@ -169,14 +209,14 @@ class AgendamentoController extends Controller
         // Busca o agendamento
         $agendamento = Agendamento::with('pessoa')->findOrFail($id);
 
-         $pdf = PDF::loadView('pdf.protocolo', [
+        $pdf = PDF::loadView('pdf.protocolo', [
             'agendamento'
             => $agendamento
-            
+
         ])->setPaper('a4', 'portrait')->setOptions(['defaultFont' => 'sans-serif']);
 
         // Faz o download
-        return $pdf->download('protocolo-'.$agendamento->id.'.pdf');
+        return $pdf->download('protocolo-' . $agendamento->id . '.pdf');
     }
 
     public function adicionandoFila($id)
@@ -185,7 +225,7 @@ class AgendamentoController extends Controller
 
         // dd($agendamentoCidadao);
 
-        
+
         return view('secretaria.sistema.fila.create', compact('agendamentoCidadao'));
     }
 }
