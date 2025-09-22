@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ReAgendamento;
 use App\Http\Controllers\Controller;
+use App\Models\Agendamento;
 use Illuminate\Http\Request;
 
 class ReAgendamentoController extends Controller
@@ -56,8 +57,17 @@ class ReAgendamentoController extends Controller
      */
     public function edit(ReAgendamento $reAgendamento)
     {
-        //
-        return view('re_agendamentos.edit', compact('reAgendamento'));
+    //   dd($reAgendamento);
+    // Verifica se o ReAgendamento tem um Agendamento associado
+    $remarcacao = $reAgendamento->agendamento;
+
+    if (!$remarcacao) {
+        // Redireciona de volta com mensagem de erro se não existir
+       return redirect()->route('agendamentos.index')->with('success', 'Pessoa adicionada à fila com sucesso!');
+
+    }
+
+        return view('secretaria.sistema.Reagendamento.create', compact('remarcacao'));
     }
 
     /**

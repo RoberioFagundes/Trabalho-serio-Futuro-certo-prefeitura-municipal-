@@ -106,12 +106,15 @@
                                         </form>
                                     </div>
 
+                                    <br>
                                     <h5 class="card-title mb-3">Lista de Pessoas na fila</h5>
                                     @if (session('success'))
                                         <div class="bg-green-200 text-green-800 px-4 py-2 rounded mb-4">
                                             {{ session('success') }}
                                         </div>
                                     @endif
+
+                                    <br>
 
                                     <div class="table-responsive">
                                         <table class="table table-striped table-hover align-middle">
@@ -137,7 +140,6 @@
                                                         <td>{{ $fila->qtd_pessoas }}</td>
                                                         <td>{{ $fila->agendamento->data_hora }}</td>
                                                         <td>{{ $fila->agendamento->hora }}</td>
-
                                                     </tr>
                                                 @endforeach
                                             </tbody>

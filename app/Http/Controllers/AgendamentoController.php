@@ -133,7 +133,8 @@ class AgendamentoController extends Controller
     public function edit(Agendamento $agendamento)
     {
         //
-        return view('agendamentos.edit', compact('agendamento'));
+       $agendamento = Agendamento::with('historicos', 'user', 'fila')->findOrFail($id);
+        return view('secretaria.sistema.Remarcacao.edite', compact('agendamento'));
     }
 
     /**

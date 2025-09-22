@@ -94,6 +94,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/protocolo/{id}/pdf', [PDFController::class, 'gerar'])->name('protocolo.pdf');
     
     Route::get('/adicionando-fila/{id}', [AgendamentoController::class, 'adicionandoFila'])->middleware(['auth'])->name('adicionando-fila');
+
+    Route::get('/reagenda/{id}',[AgendamentoController::class, 'reagendar'])->middleware(['auth'])->name('reagendar');
     
 });
 
