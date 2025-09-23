@@ -7,6 +7,8 @@
     <title>@include('titulo')</title>
     <link rel="stylesheet" href="{{ asset('template/assets/css/styles.min.css') }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
 </head>
 
 <body>
@@ -106,9 +108,9 @@
                                         </form>
                                     </div>
 
-                                    <h5 class="card-title mb-3">Lista de Agendamentos</h5>
+                                    <h5 class="card-title mb-3">Lista de Atendimento</h5>
                                     <a href="{{ route('agendamentos.create') }}"
-                                        class="btn btn-success btn-sm w-100 card-title mb-3">Novo Agendamento</a>
+                                        class="btn btn-success btn-sm w-100 card-title mb-3">Remarcação</a>
                                     <div class="table-responsive">
                                         <table class="table table-striped table-hover align-middle">
                                             @if (session('sucesso_agendamento'))
@@ -122,35 +124,34 @@
                                                     <th>Telefone</th>
                                                     <th>Data</th>
                                                     <th>Horário</th>
+                                                    <th>Status</th>
                                                     <th colspan="4" class="text-center">Ações</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($agendamentos as $agend)
+                                                
                                                     <tr>
-                                                        <td>{{ $agend->pessoa->nome }}</td>
-                                                        <td>{{ $agend->pessoa->telefone }}</td>
-                                                        <td>{{ $agend->data_hora }}</td>
-                                                        <td>{{ $agend->hora }}</td>
-                                                        <td> <a href="{{ route('protocolo.pdf', $agend->id) }}"
+                                                        <td>teste</td>
+                                                        <td>numero</td>
+                                                        <td>teste</td>
+                                                        <td>teste</td>
+                                                        <td>teste</td>
+                                                        <td> <a href="#"
                                                                 class="btn btn-danger btn-sm w-100" target="_blank">
                                                                 Gerar protocolo (PDF)
                                                             </a></td>
                                                         <td>
-                                                            <a href="{{route('adicionando-fila',['id'=>$agend->id])}}" class="btn btn-success btn-sm w-100">
-                                                                Fila
+                                                            <a href="#" class="btn btn-success btn-sm w-100">
+                                                               Confirmar Atendimento
                                                             </a>
                                                         </td>
                                                         <td>
-                                                            <a href="{{route('agendamentos.edit',['agendamento'=>$agend->id])}}" class="btn btn-warning btn-sm w-100">
+                                                            <a href="#" class="btn btn-warning btn-sm w-100">
                                                                 Remarcação
                                                             </a>
                                                         </td>
-                                                        <td><button
-                                                                class="btn btn-danger btn-sm w-100">Eliminar</button>
-                                                        </td>
                                                     </tr>
-                                                @endforeach
+                                                
                                             </tbody>
                                         </table>
                                     </div>

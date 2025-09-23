@@ -1,0 +1,70 @@
+use Carbon\Carbon;
+
+public function verificarDia(Request $request)
+{
+    $data = Carbon::parse($request->input('data')); // recebe '2025-09-28' por exemplo
+
+    if ($data->isSaturday()) {
+        return response()->json(['dia' => 'sábado', 'fim_de_semana' => true]);
+    }
+
+    if ($data->isSunday()) {
+        return response()->json(['dia' => 'domingo', 'fim_de_semana' => true]);
+    }
+
+    return response()->json(['dia' => $data->locale('pt_BR')->translatedFormat('l'), 'fim_de_semana' => false]);
+}
+
+Carbon::parse($data) → cria uma instância de data.
+
+isSaturday() e isSunday() → verificam se o dia é sábado ou domingo.
+
+translatedFormat('l') → retorna o dia da semana em português.
+
+@if(\Carbon\Carbon::parse($agendamento->data)->isWeekend())
+    <span class="text-red-600">Fim de Semana</span>
+@else
+    <span class="text-green-600">Dia Útil</span>
+@endif
+
+isWeekend() já verifica se é sábado ou domingo de uma vez.
+
+
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use App\Models\Agendamento;
+
+class AgendamentoController extends Controller
+{
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'data' => 'required|date',
+            'hora' => 'required',
+            'nome' => 'required|string|max:255',
+            // outros campos...
+        ]);
+
+        $data = Carbon::parse($validated['data']);
+
+        // 🔒 Bloqueio de sábados e domingos
+        if ($data->isWeekend()) {
+            return redirect()->back()
+                ->withErrors(['data' => 'Não é permitido agendar em sábados ou domingos.'])
+                ->withInput();
+        }
+
+        // 🔒 Bloqueio de feriados (se você tiver a tabela feriados no BD)
+        if (\DB::table('feriados')->whereDate('data', $data)->exists()) {
+            return redirect()->back()
+                ->withErrors(['data' => 'Não é permitido agendar em feriados.'])
+                ->withInput();
+        }
+
+        // Se passou na validação, salva normalmente
+        Agendamento::create($validated);
+
+        return redirect()->route('agendamentos.index')
+            ->with('success', 'Agendamento criado com sucesso!');
+    }
+}

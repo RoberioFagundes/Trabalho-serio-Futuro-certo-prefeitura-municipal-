@@ -15,7 +15,7 @@ class PessoaController extends Controller
     {
         //
         $pessoas = Pessoa::all();
-        return view('pessoas.index', compact('pessoas'));
+        return view('secretaria.sistema.Pessoa.index', compact('pessoas'));
     }
 
     /**

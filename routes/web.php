@@ -96,7 +96,9 @@ Route::middleware('auth')->group(function () {
     // Rota extra para remarcar agendamento
     Route::put('/agendamentos/{agendamento}/remarcar', [AgendamentoController::class, 'remarcar'])
     ->name('agendamentos.remarcar');
-    
+
+    Route::post('/remarcacao',[AgendamentoController::class,'remarcacaoStory'])->middleware(['auth'])->name('remarcacao-story');
+    Route::get('remarcação',[AgendamentoController::class, 'remarcacao'])->middleware(['auth'])->name('marcacao.index');
     Route::get('/adicionando-fila/{id}', [AgendamentoController::class, 'adicionandoFila'])->middleware(['auth'])->name('adicionando-fila');
 
  

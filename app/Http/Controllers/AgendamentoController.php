@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Agendamento;
 use App\Http\Controllers\Controller;
 use App\Models\AgendamentoHistories;
+use App\Models\AgendamentoHistory;
 use App\Models\Fila;
 use Illuminate\Http\Request;
 use App\Models\Pessoa;
@@ -130,7 +131,7 @@ class AgendamentoController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     *para criar o formulario de remarcação eu vou salvo os dados aqui 
      */
     public function edit(Agendamento $agendamento)
     {
@@ -139,9 +140,30 @@ class AgendamentoController extends Controller
         Você está passando ele para findOrFail() que espera um ID.
         O correto seria:
         */
-        $agendamento->load(['agendamento_histories.user', 'fila', 'user']);
-        return view('secretaria.sistema.Remarcacao.edite', compact('agendamento'));
+       
+        return view("secretaria.sistema.Remarcacao.create",compact('agendamento'));
+        
     }
+
+    public function remarcacaoStory(Request $request){
+        $remarcacao = new AgendamentoHistory();
+        $remarcacao->agendamento_id=$request->agendamento_id;
+        $remarcacao->nova_data = $request->dataNova;
+        $remarcacao->nova_hora = $request->horaNova;
+        $remarcacao->motivo = $request->MotivoInput;
+        $remarcacao->user_id = auth()->user()->id;
+        $remarcacao->save();
+
+        return redirect()
+        ->route('marcacao.index')->with('sucesso-remarcacao','Re-marcado com sucesso ');
+    }
+
+    public function remarcacao(){
+        $remarcacao = AgendamentoHistory::all();
+
+        return view ('secretaria.sistema.Remarcacao.index',compact('remarcacao'));
+    }
+
 
     /**
      * Update the specified resource in storage.

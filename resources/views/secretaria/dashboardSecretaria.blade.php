@@ -133,132 +133,14 @@
                 <div class="container-fluid">
                     <!--  Row 1 -->
                     <div class="row">
-                        <div class="col-lg-8">
-                            <div class="card w-100">
-                                <div class="card-body">
-                                    <div class="d-md-flex align-items-center">
-                                        <div>
-                                            <h4 class="card-title">Visão geral de Agendamentos</h4>
-                                            <p class="card-subtitle">
-                                                Quais dia da semana o atendimento é mais solicitado
-                                            </p>
-                                        </div>
-                                        <div class="ms-auto">
-                                            <ul class="list-unstyled mb-0">
-                                                <li class="list-inline-item text-primary">
-                                                    <span
-                                                        class="round-8 text-bg-primary rounded-circle me-1 d-inline-block"></span>
-                                                    Ample
-                                                </li>
-                                                <li class="list-inline-item text-info">
-                                                    <span
-                                                        class="round-8 text-bg-info rounded-circle me-1 d-inline-block"></span>
-                                                    Pixel Admin
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div id="sales-overview" class="mt-4 mx-n6"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="card overflow-hidden">
-                                <div class="card-body pb-0">
-                                    <div class="d-flex align-items-start">
-                                        <div>
-                                            <h4 class="card-title">Resultados</h4>
-                                            <p class="card-subtitle">Pessoas Atendidas</p>
-                                        </div>
-                                        <div class="ms-auto">
-                                            <div class="dropdown">
-                                                <a href="javascript:void(0)" class="text-muted"
-                                                    id="year1-dropdown" data-bs-toggle="dropdown"
-                                                    aria-expanded="false">
-                                                    <i class="ti ti-dots fs-7"></i>
-                                                </a>
-                                                <ul class="dropdown-menu dropdown-menu-end"
-                                                    aria-labelledby="year1-dropdown">
-                                                    <li>
-                                                        <a class="dropdown-item"
-                                                            href="javascript:void(0)">Dia</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="javascript:void(0)">Mês
-                                                            </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="javascript:void(0)">Ano
-                                                            </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mt-4 pb-3 d-flex align-items-center">
-                                        <span
-                                            class="btn btn-primary rounded-circle round-48 hstack justify-content-center">
-                                            <i class="ti ti-shopping-cart fs-6"></i>
-                                        </span>
-                                        <div class="ms-3">
-                                            <h5 class="mb-0 fw-bolder fs-4">Dia</h5>
-                                            <span class="text-muted fs-3">quantidade:</span>
-                                        </div>
-                                        <div class="ms-auto">
-                                            <span class="badge bg-secondary-subtle text-muted">+68%</span>
-                                        </div>
-                                    </div>
-                                    <div class="py-3 d-flex align-items-center">
-                                        <span
-                                            class="btn btn-warning rounded-circle round-48 hstack justify-content-center">
-                                            <i class="ti ti-star fs-6"></i>
-                                        </span>
-                                        <div class="ms-3">
-                                            <h5 class="mb-0 fw-bolder fs-4">Mês</h5>
-                                            <span class="text-muted fs-3">Quantidade</span>
-                                        </div>
-                                        <div class="ms-auto">
-                                            <span class="badge bg-secondary-subtle text-muted">+68%</span>
-                                        </div>
-                                    </div>
-                                    <div class="py-3 d-flex align-items-center">
-                                        <span
-                                            class="btn btn-success rounded-circle round-48 hstack justify-content-center">
-                                            <i class="ti ti-message-dots fs-6"></i>
-                                        </span>
-                                        <div class="ms-3">
-                                            <h5 class="mb-0 fw-bolder fs-4">Ano</h5>
-                                            <span class="text-muted fs-3">Quantidade</span>
-                                        </div>
-                                        <div class="ms-auto">
-                                            <span class="badge bg-secondary-subtle text-muted">+68%</span>
-                                        </div>
-                                    </div>
-                                    <div class="pt-3 mb-7 d-flex align-items-center">
-                                        <span
-                                            class="btn btn-secondary rounded-circle round-48 hstack justify-content-center">
-                                            <i class="ti ti-diamond fs-6"></i>
-                                        </span>
-                                        <div class="ms-3">
-                                            <h5 class="mb-0 fw-bolder fs-4">Total Geral</h5>
-                                            <span class="text-muted fs-3">Quantidade:</span>
-                                        </div>
-                                        <div class="ms-auto">
-                                            <span class="badge bg-secondary-subtle text-muted">+15%</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="d-md-flex align-items-center">
                                         <div>
-                                            <h4 class="card-title">Agendamentos</h4>
-                                            <p class="card-subtitle">
-                                                Ample Admin Vs Pixel Admin
-                                            </p>
+                                            <h4 class="card-title">Agendamentos do dia</h4>
+                                            
                                         </div>
                                         <div class="ms-auto mt-3 mt-md-0">
                                             <select class="form-select theme-select border-0"
@@ -400,7 +282,7 @@
                             <!-- Card -->
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title mb-0">Atendimentos atendidos</h4>
+                                    <h4 class="card-title mb-0">Atendimentos atendidos do dia</h4>
                                 </div>
                                 <div class="comment-widgets scrollable mb-2 common-widget" style="height: 465px"
                                     data-simplebar="">
@@ -468,7 +350,7 @@
                               bg-success-subtle
                               text-success
                               
-                            ">Approved</span>
+                            ">Atendido</span>
                                                     <span class="action-icons active">
                                                         <a href="javascript:void(0)" class="ps-3"><i
                                                                 class="ti ti-edit fs-5"></i></a>
@@ -587,7 +469,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">
-                                        <h4 class="card-title mb-0">Aguardando atendimento</h4>
+                                        <h4 class="card-title mb-0">Em fila de Atendimentos</h4>
                                         <select class="form-select w-auto ms-auto">
                                             <option selected="">hoje</option>
                                             <option value="1">amanhã</option>

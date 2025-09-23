@@ -106,63 +106,65 @@
                                         </form>
                                     </div>
 
-                                    <h5 class="card-title mb-3">Lista de Agendamentos</h5>
-                                    <a href="{{ route('agendamentos.create') }}"
-                                        class="btn btn-success btn-sm w-100 card-title mb-3">Novo Agendamento</a>
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-hover align-middle">
-                                            @if (session('sucesso_agendamento'))
-                                                <div class="alert alert-success">
-                                                    {{ session('sucesso_agendamento') }}
-                                                </div>
-                                            @endif
-                                            <thead class="table-dark">
+                                    <h5 class="card-title mb-3">Lista de Pessoas</h5>
+
+                                    <table class="table table-striped table-hover align-middle">
+                                        @if (session('sucesso_agendamento'))
+                                            <div class="alert alert-success">
+                                                {{ session('sucesso_agendamento') }}
+                                            </div>
+                                        @endif
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Nome</th>
+                                                <th>CPF</th>
+                                                <th>RG</th>
+                                                <th>DATA DE NASCIMENTO</th>
+                                                <th>Cartão do Sus</th>
+                                                <th>Telefone</th>
+                                                <th colspan="4" class="text-center">Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($pessoas as $pessoa)
                                                 <tr>
-                                                    <th>Nome</th>
-                                                    <th>Telefone</th>
-                                                    <th>Data</th>
-                                                    <th>Horário</th>
-                                                    <th colspan="4" class="text-center">Ações</th>
+                                                    <td>{{ $pessoa->nome }}</td>
+                                                    <td>{{ $pessoa->cpf }}</td>
+                                                    <td>{{ $pessoa->rg }}</td>
+                                                    <td>{{ $pessoa->data_nascimento }}</td>
+                                                    <td>{{ $pessoa->cartao_sus }}</td>
+                                                    <td>{{ $pessoa->telefone }}</td>
+                                                    <td> <a href="#" class="btn btn-danger btn-sm w-100"
+                                                            target="_blank">
+                                                            atualizar
+                                                        </a></td>
+                                                    <td>
+                                                        <a href="#" class="btn btn-success btn-sm w-100">
+                                                            Criar
+                                                        </a>
+                                                    </td>
+                                                    <td><button class="btn btn-danger btn-sm w-100">Eliminar</button>
+                                                    </td>
+                                                    <td>
+                                                        <a href="{{ route('agendamentos.create',['id'=>$pessoa->id]) }}"
+                                                            class="btn btn-success btn-sm w-100 card-title mb-3">Novo
+                                                            Agendamento</a>
+                                                        <div class="table-responsive">
+                                                    </td>
                                                 </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($agendamentos as $agend)
-                                                    <tr>
-                                                        <td>{{ $agend->pessoa->nome }}</td>
-                                                        <td>{{ $agend->pessoa->telefone }}</td>
-                                                        <td>{{ $agend->data_hora }}</td>
-                                                        <td>{{ $agend->hora }}</td>
-                                                        <td> <a href="{{ route('protocolo.pdf', $agend->id) }}"
-                                                                class="btn btn-danger btn-sm w-100" target="_blank">
-                                                                Gerar protocolo (PDF)
-                                                            </a></td>
-                                                        <td>
-                                                            <a href="{{route('adicionando-fila',['id'=>$agend->id])}}" class="btn btn-success btn-sm w-100">
-                                                                Fila
-                                                            </a>
-                                                        </td>
-                                                        <td>
-                                                            <a href="{{route('agendamentos.edit',['agendamento'=>$agend->id])}}" class="btn btn-warning btn-sm w-100">
-                                                                Remarcação
-                                                            </a>
-                                                        </td>
-                                                        <td><button
-                                                                class="btn btn-danger btn-sm w-100">Eliminar</button>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    @include('prefeito.layout.rodape')
                 </div>
+
+                @include('prefeito.layout.rodape')
             </div>
         </div>
+    </div>
     </div>
 
     <!-- Scripts -->

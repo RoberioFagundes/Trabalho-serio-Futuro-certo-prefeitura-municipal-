@@ -15,7 +15,7 @@ class AtendimentoController extends Controller
     {
         //
         $atendimentos = Atendimento::all();
-        return view('atendimentos.index', compact('atendimentos'));
+        return view('secretaria.sistema.atendimento.index', compact('atendimentos'));
     }
 
     /**
