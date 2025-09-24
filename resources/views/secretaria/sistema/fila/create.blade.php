@@ -32,6 +32,14 @@
                                         required>
                                 </div>
 
+                                 {{-- <!-- Número de Protocolo -->
+                                <div class="col-12 col-md-12">
+                                    <label for="numeroProcolo" class="form-label fw-bold">Horário de Comparecimneto:</label>
+                                    <input type="time" name="hora_comparecimento" value=""
+                                        class="form-control" id="numeroProcolo" placeholder="Digite o número de protocolo"
+                                        required>
+                                </div> --}}
+
                               
 
                                 {{-- <div class="orm-label fw-bold">

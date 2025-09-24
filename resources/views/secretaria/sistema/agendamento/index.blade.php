@@ -90,6 +90,14 @@
                     </div>
                 </nav>
             </header>
+            @if (session()->has('sucesso-agendamentos'))
+                <div class="alert alert-success alert-dismissible fade show col-12" role="alert">
+                    {{ session()->get('sucesso-agendamentos') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
 
             <!-- Conteúdo -->
             <div class="body-wrapper-inner">
@@ -118,6 +126,7 @@
                                             @endif
                                             <thead class="table-dark">
                                                 <tr>
+                                                    <th>Nº de atendimento</th>
                                                     <th>Nome</th>
                                                     <th>Telefone</th>
                                                     <th>Data</th>
@@ -128,27 +137,41 @@
                                             <tbody>
                                                 @foreach ($agendamentos as $agend)
                                                     <tr>
+                                                        <td>{{$agend->id}}</td>
                                                         <td>{{ $agend->pessoa->nome }}</td>
                                                         <td>{{ $agend->pessoa->telefone }}</td>
-                                                        <td>{{ $agend->data_hora }}</td>
+                                                        {{-- <td>{{ \Carbon\Carbon::parse($agendamento->data)->format('d/m/Y') }}</td> --}}
+                                                        <td>{{ \Carbon\Carbon::parse($agend->data_hora)->format('d/m/Y') }}</td>
                                                         <td>{{ $agend->hora }}</td>
                                                         <td> <a href="{{ route('protocolo.pdf', $agend->id) }}"
                                                                 class="btn btn-danger btn-sm w-100" target="_blank">
                                                                 Gerar protocolo (PDF)
                                                             </a></td>
                                                         <td>
-                                                            <a href="{{route('adicionando-fila',['id'=>$agend->id])}}" class="btn btn-success btn-sm w-100">
+                                                            <a href="{{ route('adicionando-fila', ['id' => $agend->id]) }}"
+                                                                class="btn btn-success btn-sm w-100">
                                                                 Fila
                                                             </a>
                                                         </td>
                                                         <td>
-                                                            <a href="{{route('agendamentos.edit',['agendamento'=>$agend->id])}}" class="btn btn-warning btn-sm w-100">
+                                                            <a href="{{ route('agendamentos.edit', ['agendamento' => $agend->id]) }}"
+                                                                class="btn btn-warning btn-sm w-100">
                                                                 Remarcação
                                                             </a>
                                                         </td>
-                                                        <td><button
-                                                                class="btn btn-danger btn-sm w-100">Eliminar</button>
+                                                        <td>
+                                                            <form
+                                                                action="{{ route('agendamentos.destroy', $agend->id) }}"
+                                                                method="POST" style="display:inline">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="btn btn-danger btn-sm"
+                                                                    onclick="return confirm('Tem certeza que deseja remover este agendamento?')">
+                                                                    Remover
+                                                                </button>
+                                                            </form>
                                                         </td>
+                                                        <!-- Formulário de exclusão -->
                                                     </tr>
                                                 @endforeach
                                             </tbody>

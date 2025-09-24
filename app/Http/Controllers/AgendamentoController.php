@@ -124,10 +124,10 @@ class AgendamentoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Agendamento $agendamento)
+    public function show(Agendamento $agendamentos)
     {
         //
-        return view('agendamentos.show', compact('agendamento'));
+        return view('secretaria.sistema.agendamento.index', compact('agendamentos'));
     }
 
     /**
@@ -140,14 +140,14 @@ class AgendamentoController extends Controller
         Você está passando ele para findOrFail() que espera um ID.
         O correto seria:
         */
-       
-        return view("secretaria.sistema.Remarcacao.create",compact('agendamento'));
-        
+
+        return view("secretaria.sistema.Remarcacao.create", compact('agendamento'));
     }
 
-    public function remarcacaoStory(Request $request){
+    public function remarcacaoStory(Request $request)
+    {
         $remarcacao = new AgendamentoHistory();
-        $remarcacao->agendamento_id=$request->agendamento_id;
+        $remarcacao->agendamento_id = $request->agendamento_id;
         $remarcacao->nova_data = $request->dataNova;
         $remarcacao->nova_hora = $request->horaNova;
         $remarcacao->motivo = $request->MotivoInput;
@@ -155,13 +155,24 @@ class AgendamentoController extends Controller
         $remarcacao->save();
 
         return redirect()
-        ->route('marcacao.index')->with('sucesso-remarcacao','Re-marcado com sucesso ');
+            ->route('marcacao.index')->with('sucesso-remarcacao', 'Re-marcado com sucesso ');
     }
 
-    public function remarcacao(){
+    public function remarcacaoDestoy($id)
+    {
+        $remarcacao = AgendamentoHistory::findOrFail($id);
+        $remarcacao->delete();
+
+        return redirect()
+            ->route('marcacao.index')
+            ->with('delete-remarcacao', 'apagado com sucesso');
+    }
+
+    public function remarcacao()
+    {
         $remarcacao = AgendamentoHistory::all();
 
-        return view ('secretaria.sistema.Remarcacao.index',compact('remarcacao'));
+        return view('secretaria.sistema.Remarcacao.index', compact('remarcacao'));
     }
 
 
@@ -181,6 +192,34 @@ class AgendamentoController extends Controller
         $agendamento->update($validated);
         return redirect()->route('agendamentos.index');
     }
+
+   public function remarcacao_edit($id){
+
+    $agendamento_history=AgendamentoHistory::findOrFail($id);
+   
+
+        return view('secretaria.sistema.Remarcacao.edite', compact('agendamento_history'));
+
+    }
+    public function remarcacao_update(Request $request, AgendamentoHistory $agendamento_history){
+        // Validação dos campos que você quer permitir alterar
+    $validated = $request->validate([
+        'nova_data' => 'required|date',
+        'nova_hora' => 'required',
+       'motivo' => 'nullable|string|max:255',
+    ]);
+
+
+    // Atualiza o registro no banco
+    $agendamento_history->update($validated);
+
+    // Redireciona para a lista ou página desejada
+    return redirect()
+        ->route('marcacao.index')
+        ->with('success', 'Remarcação atualizada com sucesso!');
+
+    }
+
 
     /**
      * Rota específica para remarcar agendamento
@@ -223,7 +262,7 @@ class AgendamentoController extends Controller
         $agendamento->delete();
 
         return redirect()->route('agendamentos.index')
-            ->with('success', 'Agendamento excluído com sucesso!');
+            ->with('success', 'Agendamento removido com sucesso!');
     }
 
     public function gerar($id)

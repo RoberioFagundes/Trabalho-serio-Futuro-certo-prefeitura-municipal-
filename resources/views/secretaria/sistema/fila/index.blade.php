@@ -127,9 +127,9 @@
                                                 <tr>
                                                     <th>Nome</th>
                                                     <th>Posição na Fila</th>
-                                                    <th>Quantidade de Pessos na fila</th>
                                                     <th>A data que foi agendado</th>
                                                     <th>Horário de Comparecimento</th>
+                                                    <th colspan="5" class="text-center">Ações</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -137,8 +137,32 @@
                                                     <tr>
                                                         <td>{{ $fila->nome }}</td>
                                                         <td>{{ $fila->numero }}</td>
-                                                        <td>{{ $fila->qtd_pessoas }}</td>
-                                                        <td>{{ $fila->agendamento->data_hora }}</td>
+                                                        <td>{{ \Carbon\Carbon::parse($fila->agendamento->data_hora)->format('d/m/Y') }}
+                                                        </td>
+                                                        <td>{{ \Carbon\Carbon::parse($fila->created_at)->format('h:i:s') }}
+                                                        </td>
+                                                        <td>
+                                                            <form action="{{ route('filas.confirmar', $fila->id) }}"
+                                                                method="POST" style="display:inline;">
+                                                                @csrf
+                                                                <button type="submit" class="btn btn-success">
+                                                                    Confirmar Atendimento
+                                                                </button>
+                                                            </form>
+                                                        </td>
+                                                        <td>
+                                                            <form action="{{ route('filas.destroy', $fila->id) }}"
+                                                                method="POST" style="display: inline">
+                                                                @csrf
+                                                                @method('DELETE')
+
+                                                                <button type="submit" class="btn btn-danger btn-sm"
+                                                                    onclick="return confirm('Tem certeza que deseja remover está pessoa da fila')">
+
+                                                                    Remover
+                                                                </button>
+                                                            </form>
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>

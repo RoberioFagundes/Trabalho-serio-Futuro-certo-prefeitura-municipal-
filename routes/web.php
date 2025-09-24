@@ -93,12 +93,23 @@ Route::middleware('auth')->group(function () {
     Route::resource('reagendamentos', ReAgendamentoController::class)->names('reagendamentos');
     Route::get('/protocolo/{id}/pdf', [PDFController::class, 'gerar'])->name('protocolo.pdf');
 
+    Route::post('/fila/{fila}/confirmar', [FilaController::class, 'confirmarAtendimento'])
+    ->name('filas.confirmar');
+
+
+   
     // Rota extra para remarcar agendamento
     Route::put('/agendamentos/{agendamento}/remarcar', [AgendamentoController::class, 'remarcar'])
     ->name('agendamentos.remarcar');
 
+    Route::delete('/remover-agendamento/{id}',[AgendamentoController::class,'delete'])->name('agendamentos.delete');
+
+    Route::delete('remarcacao/apagada/{id}',[AgendamentoController::class,'remarcacaoDestoy'])->middleware(['auth'])->name('remarcacao.delete');
     Route::post('/remarcacao',[AgendamentoController::class,'remarcacaoStory'])->middleware(['auth'])->name('remarcacao-story');
     Route::get('remarcação',[AgendamentoController::class, 'remarcacao'])->middleware(['auth'])->name('marcacao.index');
+     Route::get('remarcacao-edit/{id}',[AgendamentoController::class, 'remarcacao_edit'])->middleware('auth')->name('remarcacao-edit');
+
+    Route::put('remarcacao-update',[AgendamentoController::class, 'remarcacao_update'])->middleware('auth')->name('remarcacao.update');
     Route::get('/adicionando-fila/{id}', [AgendamentoController::class, 'adicionandoFila'])->middleware(['auth'])->name('adicionando-fila');
 
  

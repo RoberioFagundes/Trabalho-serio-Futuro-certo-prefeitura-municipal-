@@ -9,12 +9,8 @@ class AgendamentoHistory extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'agendamento_id',  // referência ao agendamento
-        'nova_data',       // nova data remarcada
-        'nova_hora',       // nova hora remarcada
-        'motivo',          // motivo da remarcação
-        'user_id'          // usuário que realizou a remarcação
+    protected $guarded = [
+              // usuário que realizou a remarcação
     ];
 
     // Relacionamento inverso para o agendamento

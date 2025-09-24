@@ -109,8 +109,8 @@
                                     </div>
 
                                     <h5 class="card-title mb-3">Lista de Atendimento</h5>
-                                    <a href="{{ route('agendamentos.create') }}"
-                                        class="btn btn-success btn-sm w-100 card-title mb-3">Remarcação</a>
+                                    {{-- <a href="{{ route('agendamentos.create') }}"
+                                        class="btn btn-success btn-sm w-100 card-title mb-3">Remarcação</a> --}}
                                     <div class="table-responsive">
                                         <table class="table table-striped table-hover align-middle">
                                             @if (session('sucesso_agendamento'))
@@ -121,36 +121,38 @@
                                             <thead class="table-dark">
                                                 <tr>
                                                     <th>Nome</th>
-                                                    <th>Telefone</th>
-                                                    <th>Data</th>
-                                                    <th>Horário</th>
+                                                    <th>Data Agendada</th>
+                                                    <th>Posição na fila</th>
+                                                    <th>Horário de comparecimento</th>
                                                     <th>Status</th>
-                                                    <th colspan="4" class="text-center">Ações</th>
+                                                    <th>Horário que foi atendido</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                @forelse ($atendimentos as $item)
                                                 
-                                                    <tr>
-                                                        <td>teste</td>
-                                                        <td>numero</td>
-                                                        <td>teste</td>
-                                                        <td>teste</td>
-                                                        <td>teste</td>
-                                                        <td> <a href="#"
+                                                    <td>{{$item->nome}}</td>
+                                                    <td>{{$item->data_agendada}}</td>
+                                                    <td>{{$item->posicao_fila}}</td>
+                                                    <td>{{$item->hora_comparecimento}}</td>
+                                                    <td>{{$item->status}}</td>
+                                                    <td>{{\Carbon\Carbon::parse($item->created_at)->format('H:i:s')}}</td>
+                                                @empty
+                                                <div class="alert alert-danger">
+                                                    Não tem Atendimento cadastrado no momento
+                                                </div>
+                                                    
+                                                @endempty
+                                                    
+                                                {{-- <tr>
+                                                    <td> 
+                                                            <a href="#"
                                                                 class="btn btn-danger btn-sm w-100" target="_blank">
                                                                 Gerar protocolo (PDF)
-                                                            </a></td>
-                                                        <td>
-                                                            <a href="#" class="btn btn-success btn-sm w-100">
-                                                               Confirmar Atendimento
                                                             </a>
                                                         </td>
-                                                        <td>
-                                                            <a href="#" class="btn btn-warning btn-sm w-100">
-                                                                Remarcação
-                                                            </a>
-                                                        </td>
-                                                    </tr>
+                                                      
+                                                    </tr> --}}
                                                 
                                             </tbody>
                                         </table>

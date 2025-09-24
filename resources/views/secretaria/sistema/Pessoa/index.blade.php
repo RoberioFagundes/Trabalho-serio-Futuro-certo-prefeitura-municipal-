@@ -147,7 +147,7 @@
                                                     </td>
                                                     <td>
                                                         <a href="{{ route('agendamentos.create',['id'=>$pessoa->id]) }}"
-                                                            class="btn btn-success btn-sm w-100 card-title mb-3">Novo
+                                                            class="btn btn-success btn-sm w-100">Novo
                                                             Agendamento</a>
                                                         <div class="table-responsive">
                                                     </td>

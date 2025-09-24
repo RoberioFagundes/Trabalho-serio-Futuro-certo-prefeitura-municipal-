@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('atendimentos', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('data_hora_inicio');
+            $table->dateTime('data_hora_inicio')->nullable();
             $table->dateTime('data_hora_fim')->nullable();
             $table->unsignedBigInteger('fila_id');
-            $table->foreign('fila_id')->references('id')->on('filas')
-            ->onDelete('cascade')->onUpdate('cascade');
-            $table->unsignedBigInteger('user_id');
+            $table->foreign('fila_id')->references('id')->on('filas');
+            $table->unsignedBigInteger('user_id')->nullable();;
             $table->foreign('user_id')->references('id')->on('users')
             ->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();

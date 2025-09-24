@@ -106,7 +106,7 @@
                                         </form>
                                     </div>
 
-                                    <h5 class="card-title mb-3">Lista de Agendamentos</h5>
+                                    <h5 class="card-title mb-3">Lista de Remarcação</h5>
                                     <a href="{{ route('agendamentos.create') }}"
                                         class="btn btn-success btn-sm w-100 card-title mb-3">Novo Agendamento</a>
                                     <div class="table-responsive">
@@ -130,23 +130,30 @@
                                             <tbody>
                                                 @foreach ($remarcacao as $remar)
                                                     <tr>
-                                                         <td>{{ $remar->agendamento->pessoa->nome }}</td>
-                                                         <td>{{ $remar->agendamento->pessoa->telefone }}</td>
-                                                        <td>{{ $remar->agendamento->data_hora }}</td>
+                                                        <td>{{ $remar->agendamento->pessoa->nome }}</td>
+                                                        <td>{{ $remar->agendamento->pessoa->telefone }}</td>
+                                                        <td>{{ \Carbon\Carbon::parse($remar->agendamento->data_hora)->format('d/m/Y') }}
+                                                        </td>
                                                         <td>{{ $remar->agendamento->hora }}</td>
-                                                        <td>{{ $remar->nova_data }}</td>
+                                                        <td>{{ \Carbon\Carbon::parse($remar->nova_data)->format('d/m/Y') }}
+                                                        </td>
                                                         <td>{{ $remar->nova_hora }}</td>
-                                                        <td> <a href="#"
-                                                                class="btn btn-danger btn-sm w-100" target="_blank">
+                                                        <td> <a href="{{route('remarcacao-edit', $remar->id)}}" class="btn btn-success btn-sm w-100"
+                                                                target="_blank">
                                                                 Atualizar
-                                                            </a></td>
-                                                        <td>
-                                                            <a href="#" class="btn btn-success btn-sm w-100">
-                                                                Deletar
                                                             </a>
                                                         </td>
-                                                        <td><button
-                                                                class="btn btn-danger btn-sm w-100">Eliminar</button>
+
+                                                        <td>
+                                                            <form
+                                                                action="{{ route('remarcacao.delete', $remar->id) }}"
+                                                                method="POST"
+                                                                onsubmit="return confirm('Tem certeza que deseja apagar esta remarcação?')">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit"
+                                                                    class="btn btn-danger">Apagar</button>
+                                                            </form>
                                                         </td>
                                                     </tr>
                                                 @endforeach
