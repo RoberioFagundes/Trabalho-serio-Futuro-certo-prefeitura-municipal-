@@ -19,21 +19,31 @@ class AgendamentoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-        $agendamentos = Agendamento::orderBy('data_hora')->paginate(10);
+        // Consulta unificada: busca agendamentos e junta dados da pessoa
+        $agendamentos = Agendamento::join('pessoas', 'pessoas.id', '=', 'agendamentos.pessoa_id')
+            ->when($request->filled('nome'), function ($query) use ($request) {
+                $query->where(function ($q) use ($request) {
+                    $q->where('pessoas.nome', 'like', '%' . $request->nome . '%')
+                        ->orWhere('agendamentos.data_hora', 'like', '%' . $request->nome . '%');
+                });
+            })
+            ->select(
+                'agendamentos.*',
+                'pessoas.nome as pessoa_nome' // traz o nome da pessoa junto
+            )
+            ->orderBy('agendamentos.data_hora')
+            ->simplePaginate(2);
 
-
-        $Pessoa = Pessoa::when(request()->has('nome'), function ($whenQuery) {
-            $whenQuery->where('nome', 'like', '%' . request()->nome . '%');
-        })->get();
-
-        return view(
-            'secretaria.sistema.agendamento.index',
-            compact('agendamentos', 'Pessoa')
-        )->with('sucesso-agendamento', "Agendamento Cadastro com Sucesso");
+        return view('secretaria.sistema.agendamento.index', [
+            'agendamentos' => $agendamentos,
+            'nome'         => $request->nome
+        ]);
     }
+
+    
+
 
 
     public function create()
@@ -193,31 +203,31 @@ class AgendamentoController extends Controller
         return redirect()->route('agendamentos.index');
     }
 
-   public function remarcacao_edit($id){
+    public function remarcacao_edit($id)
+    {
 
-    $agendamento_history=AgendamentoHistory::findOrFail($id);
-   
+        $agendamento_history = AgendamentoHistory::findOrFail($id);
+
 
         return view('secretaria.sistema.Remarcacao.edite', compact('agendamento_history'));
-
     }
-    public function remarcacao_update(Request $request, AgendamentoHistory $agendamento_history){
+    public function remarcacao_update(Request $request, AgendamentoHistory $agendamento_history)
+    {
         // Validação dos campos que você quer permitir alterar
-    $validated = $request->validate([
-        'nova_data' => 'required|date',
-        'nova_hora' => 'required',
-       'motivo' => 'nullable|string|max:255',
-    ]);
+        $validated = $request->validate([
+            'nova_data' => 'required|date',
+            'nova_hora' => 'required',
+            'motivo' => 'nullable|string|max:255',
+        ]);
 
 
-    // Atualiza o registro no banco
-    $agendamento_history->update($validated);
+        // Atualiza o registro no banco
+        $agendamento_history->update($validated);
 
-    // Redireciona para a lista ou página desejada
-    return redirect()
-        ->route('marcacao.index')
-        ->with('success', 'Remarcação atualizada com sucesso!');
-
+        // Redireciona para a lista ou página desejada
+        return redirect()
+            ->route('marcacao.index')
+            ->with('success', 'Remarcação atualizada com sucesso!');
     }
 
 

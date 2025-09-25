@@ -21,37 +21,30 @@ class FilaController extends Controller
 
     public function confirmarAtendimento(Fila $fila)
     {
-        $atendimento = new Atendimento();
+        Atendimento::create([
+            'nome' => $fila->nome,
+            'data_agendada' => $fila->agendamento->created_at,
+            'hora_comparecimento' => now()->format('H:i:s'),
+            'posicao_fila' => $fila->numero,
+            'fila_id' => $fila->id,
+            'agendamento_id' => $fila->agendamento_id,
+            'user_id' => auth()->id(),
+            'status' => 'atendido',
+        ]);
 
-        // Preenche os campos do novo atendimento
-        $atendimento->nome = $fila->nome;
-        $atendimento->data_agendada = $fila->agendamento->created_at;
-        $atendimento->hora_comparecimento = now()->format('H:i:s'); // hora atual
-        $atendimento->posicao_fila = $fila->numero; // certifique-se que a coluna existe
-        $atendimento->fila_id = $fila->id;
-        $atendimento->agendamento_id=$fila->agendamento_id;
-        $atendimento->user_id = auth()->id(); // mais seguro
-        $atendimento->status="atendido";
-
-        $atendimento->save(); // grava no banco
-
-        // dd($atendimento->toArray());
-
-        // Guardar posição antes de remover
         $posicaoRemovida = $fila->numero;
 
-        // Remover da fila
-        $fila->delete();
+        $fila->delete(); // sem erro agora
 
-        // Reorganizar a fila
-        Fila::where('numero', '>', $posicaoRemovida)
-            ->orderBy('numero')
-            ->get()
-            ->each(fn($item) => $item->decrement('numero'));
+        Fila::where('numero', '>', $posicaoRemovida)->decrement('numero');
 
         return redirect()->route('filas.index')
             ->with('success', 'Atendimento confirmado e pessoa removida da fila!');
     }
+
+
+
+
     /**
      * Show the form for creating a new resource.
      */

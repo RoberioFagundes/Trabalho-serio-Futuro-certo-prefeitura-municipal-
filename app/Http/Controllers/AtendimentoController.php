@@ -11,11 +11,16 @@ class AtendimentoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        $atendimentos = Atendimento::all();
-        return view('secretaria.sistema.atendimento.index', compact('atendimentos'));
+         $atendimentos = Atendimento::when($request->filled('search'), function ($query) use ($request) {
+                $query->where('nome', 'like', '%' . $request->search . '%');
+            })
+            ->orderBy('created_at', 'desc')
+            ->simplePaginate(2); // Paginação de 10 itens por página
+
+        return view('secretaria.sistema.atendimento.index', ['atendimentos' => $atendimentos]);
     }
 
     /**

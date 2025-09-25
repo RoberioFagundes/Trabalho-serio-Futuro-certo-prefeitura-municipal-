@@ -102,6 +102,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/agendamentos/{agendamento}/remarcar', [AgendamentoController::class, 'remarcar'])
     ->name('agendamentos.remarcar');
 
+    // Rota que pegar o agendamento do dia 
+    Route::get('/secretaria/dashboard', [SecretariaController::class, 'agendamento_dia'])->name('dashboard.secretaria');
+
+
     Route::delete('/remover-agendamento/{id}',[AgendamentoController::class,'delete'])->name('agendamentos.delete');
 
     Route::delete('remarcacao/apagada/{id}',[AgendamentoController::class,'remarcacaoDestoy'])->middleware(['auth'])->name('remarcacao.delete');

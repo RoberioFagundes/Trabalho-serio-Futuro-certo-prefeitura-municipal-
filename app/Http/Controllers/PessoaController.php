@@ -11,12 +11,22 @@ class PessoaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-        $pessoas = Pessoa::all();
-        return view('secretaria.sistema.Pessoa.index', compact('pessoas'));
+        $search = $request->input('nome'); // pega o valor do input do form
+
+        $pessoas = Pessoa::when($search, function ($query, $search) {
+            $query->where('nome', 'like', '%' . $search . '%');
+        })
+            ->orderBy('nome')
+            ->paginate(10);
+
+        return view('secretaria.sistema.Pessoa.index', [
+            'pessoas' => $pessoas,
+            'nome' => $search,
+        ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -24,7 +34,7 @@ class PessoaController extends Controller
     public function create()
     {
         //
-    return view('pessoas.create');
+        return view('pessoas.create');
     }
 
     /**

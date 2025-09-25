@@ -10,12 +10,11 @@
 </head>
 
 <body>
-    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-        data-sidebar-position="fixed" data-header-position="fixed">
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6"
+        data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
 
         <!-- Top Bar -->
-        <div
-            class="app-topstrip bg-dark py-3 px-3 d-flex flex-column flex-lg-row align-items-center justify-content-between">
+        <div class="app-topstrip bg-dark py-3 px-3 d-flex flex-column flex-lg-row align-items-center justify-content-between">
             <h3 class="text-white mb-2 mb-lg-0 fs-5 text-center text-lg-start">
                 Prefeitura Municipal - Palmas de Monte Alto - Bahia
             </h3>
@@ -25,7 +24,7 @@
         <aside class="left-sidebar">
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
-                    <a href="./index.html" class="text-nowrap logo-img">
+                    <a href="{{ route('dashboard') }}" class="text-nowrap logo-img">
                         <img src="{{ asset('imagem/logo.png') }}" height="80" width="160" class="img-fluid">
                     </a>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
@@ -52,8 +51,7 @@
 
                         <!-- Notificações -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link" href="#" id="drop1" data-bs-toggle="dropdown"
-                                aria-expanded="false">
+                            <a class="nav-link" href="#" id="drop1" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="ti ti-bell"></i>
                                 <div class="notification bg-primary rounded-circle"></div>
                             </a>
@@ -69,8 +67,7 @@
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
                             <li class="nav-item dropdown">
-                                <a class="nav-link" href="#" id="drop2" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
+                                <a class="nav-link" href="#" id="drop2" data-bs-toggle="dropdown" aria-expanded="false">
                                     <img src="{{ asset('template/assets/images/profile/user-1.jpg') }}" alt=""
                                         width="35" height="35" class="rounded-circle">
                                 </a>
@@ -98,65 +95,96 @@
                         <div class="col-12">
                             <div class="card shadow-sm">
                                 <div class="card-body">
-                                    <div class="col-8">
-                                        <form class="d-flex" action="" method="get">
-                                            <input class="form-control me-2" name="searchCaixaCliente" type="text"
-                                                placeholder="Pesquisar">
-                                            <input type="submit" class="btn btn-primary mx-2" value="Pesquisar">
+                                    <div class="card-body">
+                                        <form action="{{ route('pessoas.index') }}">
+                                            <div class="row">
+
+                                                <div class="col-md-6 col-sm-6">
+                                                    <label class="form-label" for="nome">Nome</label>
+                                                    <input type="text" name="nome" id="nome"
+                                                        class="form-control" value="{{ $nome }}"
+                                                        placeholder="Nome da conta" />
+                                                </div>
+
+                                                <div class="col-md-6 col-sm-6 mt-3 pt-4">
+                                                    <button type="submit"
+                                                        class="btn btn-info btn-sm">Pesquisar</button>
+                                                    <a href="{{ route('pessoas.index') }}"
+                                                        class="btn btn-warning btn-sm">Limpar</a>
+                                                </div>
+
+                                            </div>
+
                                         </form>
                                     </div>
 
                                     <h5 class="card-title mb-3">Lista de Pessoas</h5>
 
-                                    <table class="table table-striped table-hover align-middle">
-                                        @if (session('sucesso_agendamento'))
-                                            <div class="alert alert-success">
-                                                {{ session('sucesso_agendamento') }}
-                                            </div>
-                                        @endif
-                                        <thead class="table-dark">
-                                            <tr>
-                                                <th>Nome</th>
-                                                <th>CPF</th>
-                                                <th>RG</th>
-                                                <th>DATA DE NASCIMENTO</th>
-                                                <th>Cartão do Sus</th>
-                                                <th>Telefone</th>
-                                                <th colspan="4" class="text-center">Ações</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($pessoas as $pessoa)
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-hover align-middle">
+                                            @if (session('sucesso_agendamento'))
+                                                <div class="alert alert-success">
+                                                    {{ session('sucesso_agendamento') }}
+                                                </div>
+                                            @endif
+                                            <thead class="table-dark">
                                                 <tr>
-                                                    <td>{{ $pessoa->nome }}</td>
-                                                    <td>{{ $pessoa->cpf }}</td>
-                                                    <td>{{ $pessoa->rg }}</td>
-                                                    <td>{{ $pessoa->data_nascimento }}</td>
-                                                    <td>{{ $pessoa->cartao_sus }}</td>
-                                                    <td>{{ $pessoa->telefone }}</td>
-                                                    <td> <a href="#" class="btn btn-danger btn-sm w-100"
-                                                            target="_blank">
-                                                            atualizar
-                                                        </a></td>
-                                                    <td>
-                                                        <a href="#" class="btn btn-success btn-sm w-100">
-                                                            Criar
-                                                        </a>
-                                                    </td>
-                                                    <td><button class="btn btn-danger btn-sm w-100">Eliminar</button>
-                                                    </td>
-                                                    <td>
-                                                        <a href="{{ route('agendamentos.create',['id'=>$pessoa->id]) }}"
-                                                            class="btn btn-success btn-sm w-100">Novo
-                                                            Agendamento</a>
-                                                        <div class="table-responsive">
-                                                    </td>
+                                                    <th>Nome</th>
+                                                    <th>CPF</th>
+                                                    <th>RG</th>
+                                                    <th>Data de Nascimento</th>
+                                                    <th>Cartão do SUS</th>
+                                                    <th>Telefone</th>
+                                                    <th colspan="4" class="text-center">Ações</th>
                                                 </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($pessoas as $pessoa)
+                                                    <tr>
+                                                        <td>{{ $pessoa->nome }}</td>
+                                                        <td>{{ $pessoa->cpf }}</td>
+                                                        <td>{{ $pessoa->rg }}</td>
+                                                        <td>{{ $pessoa->data_nascimento }}</td>
+                                                        <td>{{ $pessoa->cartao_sus }}</td>
+                                                        <td>{{ $pessoa->telefone }}</td>
+                                                        <td>
+                                                            <a href="{{ route('pessoas.edit',['pessoa',$pessoa->id] ) }}"
+                                                               class="btn btn-warning btn-sm w-100">
+                                                               Editar
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <a href="{{ route('pessoas.create') }}"
+                                                               class="btn btn-success btn-sm w-100">
+                                                               Criar
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <form action="{{ route('pessoas.destroy',['pessoa',$pessoa->id] ) }}" method="POST"
+                                                                  onsubmit="return confirm('Tem certeza que deseja eliminar esta pessoa?')">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="btn btn-danger btn-sm w-100">
+                                                                    Eliminar
+                                                                </button>
+                                                            </form>
+                                                        </td>
+                                                        <td>
+                                                            <a href="{{ route('agendamentos.create', ['id' => $pessoa->id]) }}"
+                                                               class="btn btn-primary btn-sm w-100">
+                                                               Novo Agendamento
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+
                                 </div>
                             </div>
+
+                            {{ $pessoas->links() }}
                         </div>
                     </div>
                 </div>
@@ -164,7 +192,6 @@
                 @include('prefeito.layout.rodape')
             </div>
         </div>
-    </div>
     </div>
 
     <!-- Scripts -->

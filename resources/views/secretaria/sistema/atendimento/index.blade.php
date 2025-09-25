@@ -7,8 +7,6 @@
     <title>@include('titulo')</title>
     <link rel="stylesheet" href="{{ asset('template/assets/css/styles.min.css') }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
 </head>
 
 <body>
@@ -76,7 +74,6 @@
                                     <img src="{{ asset('template/assets/images/profile/user-1.jpg') }}" alt=""
                                         width="35" height="35" class="rounded-circle">
                                 </a>
-
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
                                     aria-labelledby="drop2">
                                     <div class="message-body">
@@ -100,83 +97,88 @@
                         <div class="col-12">
                             <div class="card shadow-sm">
                                 <div class="card-body">
-                                    <div class="col-8">
-                                        <form class="d-flex" action="" method="get">
-                                            <input class="form-control me-2" name="searchCaixaCliente" type="text"
-                                                placeholder="Pesquisar">
-                                            <input type="submit" class="btn btn-primary mx-2" value="Pesquisar">
+
+                                    {{-- Formulário de Pesquisa --}}
+                                    <div class="col-8 mb-3">
+                                        <form class="d-flex" action="{{ route('atendimentos.index') }}" method="get">
+                                            <input class="form-control me-2" name="search" type="text"
+                                                placeholder="Pesquisar" value="{{ request('search') }}">
+                                            <button type="submit" class="btn btn-primary mx-2">Pesquisar</button>
+                                            <a href="{{ route('atendimentos.index') }}"
+                                                class="btn btn-warning">Limpar</a>
                                         </form>
                                     </div>
 
+                                    {{-- Mensagem de sucesso --}}
+                                    @if (session('sucesso_agendamento'))
+                                        <div class="alert alert-success">
+                                            {{ session('sucesso_agendamento') }}
+                                        </div>
+                                    @endif
+
                                     <h5 class="card-title mb-3">Lista de Atendimento</h5>
-                                    {{-- <a href="{{ route('agendamentos.create') }}"
-                                        class="btn btn-success btn-sm w-100 card-title mb-3">Remarcação</a> --}}
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-hover align-middle">
-                                            @if (session('sucesso_agendamento'))
-                                                <div class="alert alert-success">
-                                                    {{ session('sucesso_agendamento') }}
-                                                </div>
-                                            @endif
-                                            <thead class="table-dark">
-                                                <tr>
-                                                    <th>Nome</th>
-                                                    <th>Data Agendada</th>
-                                                    <th>Posição na fila</th>
-                                                    <th>Horário de comparecimento</th>
-                                                    <th>Status</th>
-                                                    <th>Horário que foi atendido</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @forelse ($atendimentos as $item)
-                                                
-                                                    <td>{{$item->nome}}</td>
-                                                    <td>{{$item->data_agendada}}</td>
-                                                    <td>{{$item->posicao_fila}}</td>
-                                                    <td>{{$item->hora_comparecimento}}</td>
-                                                    <td>{{$item->status}}</td>
-                                                    <td>{{\Carbon\Carbon::parse($item->created_at)->format('H:i:s')}}</td>
-                                                @empty
-                                                <div class="alert alert-danger">
-                                                    Não tem Atendimento cadastrado no momento
-                                                </div>
-                                                    
-                                                @endempty
-                                                    
-                                                {{-- <tr>
-                                                    <td> 
-                                                            <a href="#"
-                                                                class="btn btn-danger btn-sm w-100" target="_blank">
-                                                                Gerar protocolo (PDF)
-                                                            </a>
-                                                        </td>
-                                                      
-                                                    </tr> --}}
-                                                
-                                            </tbody>
-                                        </table>
-                                    </div>
+
+                                    {{-- Lista de atendimentos --}}
+                                    @if ($atendimentos->isEmpty())
+                                        <div class="alert alert-danger">
+                                            Não há atendimento cadastrado no momento.
+                                        </div>
+                                    @else
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover align-middle">
+                                                <thead class="table-dark">
+                                                    <tr>
+                                                        <th>Nome</th>
+                                                        <th>Data Agendada</th>
+                                                        <th>Posição na fila</th>
+                                                        <th>Horário de comparecimento</th>
+                                                        <th>Status</th>
+                                                        <th>Horário que foi atendido</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($atendimentos as $item)
+                                                        <tr>
+                                                            <td>{{ $item->nome }}</td>
+                                                            <td>{{ $item->data_agendada }}</td>
+                                                            <td>{{ $item->posicao_fila }}</td>
+                                                            <td>{{ $item->hora_comparecimento }}</td>
+                                                            <td>{{ $item->status }}</td>
+                                                            <td>{{ \Carbon\Carbon::parse($item->created_at)->format('H:i:s') }}
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+
+                                                </tbody>
+                                            </table>
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-bordered">
+                                                    <!-- cabeçalho e corpo da tabela -->
+                                                    {{ $atendimentos->withQueryString()->links() }}
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
+                         @include('prefeito.layout.rodape')
                     </div>
-
-                    @include('prefeito.layout.rodape')
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Scripts -->
-    <script src="{{ asset('template/assets/libs/jquery/dist/jquery.min.js') }}"></script>
-    <script src="{{ asset('template/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('template/assets/js/sidebarmenu.js') }}"></script>
-    <script src="{{ asset('template/assets/js/app.min.js') }}"></script>
-    <script src="{{ asset('template/assets/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('template/assets/libs/simplebar/dist/simplebar.js') }}"></script>
-    <script src="{{ asset('template/assets/js/dashboard.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+
+        <!-- Scripts -->
+        <script src="{{ asset('template/assets/libs/jquery/dist/jquery.min.js') }}"></script>
+        <script src="{{ asset('template/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ asset('template/assets/js/sidebarmenu.js') }}"></script>
+        <script src="{{ asset('template/assets/js/app.min.js') }}"></script>
+        <script src="{{ asset('template/assets/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
+        <script src="{{ asset('template/assets/libs/simplebar/dist/simplebar.js') }}"></script>
+        <script src="{{ asset('template/assets/js/dashboard.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
 </body>
 
 </html>

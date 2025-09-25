@@ -106,11 +106,26 @@
                         <div class="col-12">
                             <div class="card shadow-sm">
                                 <div class="card-body">
-                                    <div class="col-8">
-                                        <form class="d-flex" action="" method="get">
-                                            <input class="form-control me-2" name="searchCaixaCliente" type="text"
-                                                placeholder="Pesquisar">
-                                            <input type="submit" class="btn btn-primary mx-2" value="Pesquisar">
+                                    <div class="card-body">
+                                        <form action="{{ route('agendamentos.index') }}">
+                                            <div class="row">
+
+                                                <div class="col-md-6 col-sm-6">
+                                                    <label class="form-label" for="nome">Nome</label>
+                                                    <input type="text" name="nome" id="nome"
+                                                        class="form-control" value="{{ $nome }}"
+                                                        placeholder="Nome da conta" />
+                                                </div>
+
+                                                <div class="col-md-6 col-sm-6 mt-3 pt-4">
+                                                    <button type="submit"
+                                                        class="btn btn-info btn-sm">Pesquisar</button>
+                                                    <a href="{{ route('agendamentos.index') }}"
+                                                        class="btn btn-warning btn-sm">Limpar</a>
+                                                </div>
+
+                                            </div>
+
                                         </form>
                                     </div>
 
@@ -137,22 +152,18 @@
                                             <tbody>
                                                 @foreach ($agendamentos as $agend)
                                                     <tr>
-                                                        <td>{{$agend->id}}</td>
+                                                        <td>{{ $agend->id }}</td>
                                                         <td>{{ $agend->pessoa->nome }}</td>
                                                         <td>{{ $agend->pessoa->telefone }}</td>
                                                         {{-- <td>{{ \Carbon\Carbon::parse($agendamento->data)->format('d/m/Y') }}</td> --}}
-                                                        <td>{{ \Carbon\Carbon::parse($agend->data_hora)->format('d/m/Y') }}</td>
+                                                        <td>{{ \Carbon\Carbon::parse($agend->data_hora)->format('d/m/Y') }}
+                                                        </td>
                                                         <td>{{ $agend->hora }}</td>
                                                         <td> <a href="{{ route('protocolo.pdf', $agend->id) }}"
                                                                 class="btn btn-danger btn-sm w-100" target="_blank">
                                                                 Gerar protocolo (PDF)
                                                             </a></td>
-                                                        <td>
-                                                            <a href="{{ route('adicionando-fila', ['id' => $agend->id]) }}"
-                                                                class="btn btn-success btn-sm w-100">
-                                                                Fila
-                                                            </a>
-                                                        </td>
+                                                       
                                                         <td>
                                                             <a href="{{ route('agendamentos.edit', ['agendamento' => $agend->id]) }}"
                                                                 class="btn btn-warning btn-sm w-100">
@@ -174,10 +185,14 @@
                                                         <!-- Formulário de exclusão -->
                                                     </tr>
                                                 @endforeach
+                                               
                                             </tbody>
                                         </table>
+
+                                        
                                     </div>
                                 </div>
+                                {{ $agendamentos->links() }}
                             </div>
                         </div>
                     </div>

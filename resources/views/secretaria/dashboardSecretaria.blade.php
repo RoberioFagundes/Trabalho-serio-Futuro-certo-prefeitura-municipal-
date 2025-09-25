@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@include('titulo')</title>
-    <link rel="shortcut icon" type="image/png" href="{{ asset('template/assets/images/logos/favicon.png') }}" />
+    {{-- <link rel="shortcut icon" type="image/png" href="{{ asset('template/assets/images/logos/favicon.png') }}" /> --}}
     <link rel="stylesheet" href="{{ asset('template/assets/css/styles.min.css') }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
@@ -19,14 +19,15 @@
         <div class="app-topstrip bg-dark py-6 px-3 w-100 d-lg-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center justify-content-center gap-5 mb-2 mb-lg-0">
                 <a class="d-flex justify-content-center" href="#">
-                    
+
                 </a>
 
 
             </div>
 
             <div class="d-lg-flex align-items-center gap-2">
-                <h3 class="text-white mb-2 mb-lg-0 fs-5 text-center">Prefeitura Municipal - Palmas de Monte Alto - Bahia</h3>
+                <h3 class="text-white mb-2 mb-lg-0 fs-5 text-center">Prefeitura Municipal - Palmas de Monte Alto - Bahia
+                </h3>
                 <div class="d-flex align-items-center justify-content-center gap-2">
 
                     {{-- <div class="dropdown d-flex">
@@ -75,8 +76,8 @@
                             </a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link " href="javascript:void(0)" id="drop1"
-                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link " href="javascript:void(0)" id="drop1" data-bs-toggle="dropdown"
+                                aria-expanded="false">
                                 <i class="ti ti-bell"></i>
                                 <div class="notification bg-primary rounded-circle"></div>
                             </a>
@@ -96,10 +97,10 @@
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
 
                             <li class="nav-item dropdown">
-                                <a class="nav-link " href="javascript:void(0)" id="drop2"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    <img src="{{ asset('template/assets/images/profile/user-1.jpg') }}"
-                                        alt="" width="35" height="35" class="rounded-circle">
+                                <a class="nav-link " href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <img src="{{ asset('template/assets/images/profile/user-1.jpg') }}" alt=""
+                                        width="35" height="35" class="rounded-circle">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
                                     aria-labelledby="drop2">
@@ -119,7 +120,7 @@
                                             <i class="ti ti-list-check fs-6"></i>
                                             <p class="mb-0 fs-3">My Task</p>
                                         </a>
-                                        <a href="{{route('logout')}}"
+                                        <a href="{{ route('logout') }}"
                                             class="btn btn-outline-primary mx-3 mt-2 d-block" @crsf> Sair</a>
                                     </div>
                                 </div>
@@ -133,14 +134,14 @@
                 <div class="container-fluid">
                     <!--  Row 1 -->
                     <div class="row">
-                        
+
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="d-md-flex align-items-center">
                                         <div>
                                             <h4 class="card-title">Agendamentos do dia</h4>
-                                            
+
                                         </div>
                                         <div class="ms-auto mt-3 mt-md-0">
                                             <select class="form-select theme-select border-0"
@@ -152,401 +153,137 @@
                                         </div>
                                     </div>
                                     <div class="table-responsive mt-4">
-                                        <table class="table mb-0 text-nowrap varient-table align-middle fs-3">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col" class="px-0 text-muted">
-                                                        Telefone
-                                                    </th>
-                                                    <th scope="col" class="px-0 text-muted">Nome</th>
-                                                    <th scope="col" class="px-0 text-muted">
-                                                        Prioridade
-                                                    </th>
-                                                    <th scope="col" class="px-0 text-muted text-end">
-                                                        Data
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td class="px-0">
-                                                        <div class="d-flex align-items-center">
-                                                            <img src="{{ asset('template/assets/images/profile/user-3.jpg') }}"
-                                                                class="rounded-circle" width="40"
-                                                                alt="flexy" />
-                                                            <div class="ms-3">
-                                                                <h6 class="mb-0 fw-bolder">Sunil Joshi</h6>
-                                                                <span class="text-muted">Web Designer</span>
-                                                            </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="card shadow-sm">
+                                                    <div class="card-body">
+                                                        <div class="card-body">
+                                                            <form action="{{ route('agendamentos.index') }}">
+                                                                <div class="row">
+
+                                                                    <div class="col-md-6 col-sm-6">
+                                                                        <label class="form-label"
+                                                                            for="nome">Nome</label>
+                                                                        <input type="text" name="nome"
+                                                                            id="nome" class="form-control"
+                                                                            value="{{ $nome ?? '' }}"
+                                                                            placeholder="Nome da conta" />
+
+                                                                    </div>
+
+                                                                    <div class="col-md-6 col-sm-6 mt-3 pt-4">
+                                                                        <button type="submit"
+                                                                            class="btn btn-info btn-sm">Pesquisar</button>
+                                                                        <a href="{{ route('agendamentos.index') }}"
+                                                                            class="btn btn-warning btn-sm">Limpar</a>
+                                                                    </div>
+
+                                                                </div>
+
+                                                            </form>
                                                         </div>
-                                                    </td>
-                                                    <td class="px-0">Elite Admin</td>
-                                                    <td class="px-0">
-                                                        <span class="badge bg-info">Baixo</span>
-                                                    </td>
-                                                    <td class="px-0 text-dark fw-medium text-end">
-                                                        $3.9K
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="px-0">
-                                                        <div class="d-flex align-items-center">
-                                                            <img src="{{ asset('template/assets/images/profile/user-5.jpg') }}"
-                                                                class="rounded-circle" width="40"
-                                                                alt="flexy" />
-                                                            <div class="ms-3">
-                                                                <h6 class="mb-0 fw-bolder">
-                                                                    Andrew McDownland
-                                                                </h6>
-                                                                <span class="text-muted">Project Manager</span>
-                                                            </div>
+
+                                                        <h5 class="card-title mb-3">Lista de Agendamentos do dia</h5>
+                                                        <a href="{{ route('agendamentos.create') }}"
+                                                            class="btn btn-success btn-sm w-100 card-title mb-3">Novo
+                                                            Agendamento</a>
+                                                        <div class="table-responsive">
+                                                            <table
+                                                                class="table table-striped table-hover align-middle">
+                                                                @if (session('sucesso_agendamento'))
+                                                                    <div class="alert alert-success">
+                                                                        {{ session('sucesso_agendamento') }}
+                                                                    </div>
+                                                                @endif
+                                                                <thead class="table-dark">
+                                                                    <tr>
+                                                                        <th>Nº de atendimento</th>
+                                                                        <th>Nome</th>
+                                                                        <th>Telefone</th>
+                                                                        <th>Data</th>
+                                                                        <th>Horário</th>
+                                                                        <th colspan="4" class="text-center">Ações
+                                                                        </th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+
+                                                                    @foreach ($agendamentos_dia as $agend)
+                                                                        <tr>
+                                                                            <td>{{ $agend->id }}</td>
+                                                                            <td>{{ $agend->pessoa->nome }}</td>
+                                                                            <td>{{ $agend->pessoa->telefone }}</td>
+                                                                            {{-- <td>{{ \Carbon\Carbon::parse($agendamento->data)->format('d/m/Y') }}</td> --}}
+                                                                            <td>{{ \Carbon\Carbon::parse($agend->data_hora)->format('d/m/Y') }}
+                                                                            </td>
+                                                                            <td>{{ $agend->hora }}</td>
+                                                                            <td> <a href="{{ route('protocolo.pdf', $agend->id) }}"
+                                                                                    class="btn btn-danger btn-sm w-100"
+                                                                                    target="_blank">
+                                                                                    Gerar protocolo (PDF)
+                                                                                </a></td>
+                                                                            <td>
+                                                                                <a href="{{ route('adicionando-fila', ['id' => $agend->id]) }}"
+                                                                                    class="btn btn-success btn-sm w-100">
+                                                                                    Fila
+                                                                                </a>
+                                                                            </td>
+                                                                            <td>
+                                                                                <a href="{{ route('agendamentos.edit', ['agendamento' => $agend->id]) }}"
+                                                                                    class="btn btn-warning btn-sm w-100">
+                                                                                    Remarcação
+                                                                                </a>
+                                                                            </td>
+                                                                            <td>
+                                                                                <form
+                                                                                    action="{{ route('agendamentos.destroy', $agend->id) }}"
+                                                                                    method="POST"
+                                                                                    style="display:inline">
+                                                                                    @csrf
+                                                                                    @method('DELETE')
+                                                                                    <button type="submit"
+                                                                                        class="btn btn-danger btn-sm"
+                                                                                        onclick="return confirm('Tem certeza que deseja remover este agendamento?')">
+                                                                                        Remover
+                                                                                    </button>
+                                                                                </form>
+                                                                            </td>
+                                                                            <!-- Formulário de exclusão -->
+                                                                        </tr>
+                                                                    @endforeach
+
+
+                                                                </tbody>
+                                                            </table>
+
+
                                                         </div>
-                                                    </td>
-                                                    <td class="px-0">Real Homes WP Theme</td>
-                                                    <td class="px-0">
-                                                        <span class="badge text-bg-primary">Media</span>
-                                                    </td>
-                                                    <td class="px-0 text-dark fw-medium text-end">
-                                                        $24.5K
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="px-0">
-                                                        <div class="d-flex align-items-center">
-                                                            <img src="{{ asset('template/assets/images/profile/user-6.jpg') }}"
-                                                                class="rounded-circle" width="40"
-                                                                alt="flexy" />
-                                                            <div class="ms-3">
-                                                                <h6 class="mb-0 fw-bolder">
-                                                                    Christopher Jamil
-                                                                </h6>
-                                                                <span class="text-muted">SEO Manager</span>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td class="px-0">MedicalPro WP Theme</td>
-                                                    <td class="px-0">
-                                                        <span class="badge bg-warning">Alta</span>
-                                                    </td>
-                                                    <td class="px-0 text-dark fw-medium text-end">
-                                                        $12.8K
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="px-0">
-                                                        <div class="d-flex align-items-center">
-                                                            <img src="{{ asset('template/assets/images/profile/user-7.jpg') }}"
-                                                                class="rounded-circle" width="40"
-                                                                alt="flexy" />
-                                                            <div class="ms-3">
-                                                                <h6 class="mb-0 fw-bolder">Nirav Joshi</h6>
-                                                                <span class="text-muted">Frontend Engineer</span>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td class="px-0">Hosting Press HTML</td>
-                                                    <td class="px-0">
-                                                        <span class="badge bg-danger">Low</span>
-                                                    </td>
-                                                    <td class="px-0 text-dark fw-medium text-end">
-                                                        $2.4K
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="px-0">
-                                                        <div class="d-flex align-items-center">
-                                                            <img src="{{ asset('template/assets/images/profile/user-8.jpg') }}"
-                                                                class="rounded-circle" width="40"
-                                                                alt="flexy" />
-                                                            <div class="ms-3">
-                                                                <h6 class="mb-0 fw-bolder">Micheal Doe</h6>
-                                                                <span class="text-muted">Content Writer</span>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td class="px-0">Helping Hands WP Theme</td>
-                                                    <td class="px-0">
-                                                        <span class="badge bg-success">Low</span>
-                                                    </td>
-                                                    <td class="px-0 text-dark fw-medium text-end">
-                                                        $9.3K
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <!-- Card -->
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title mb-0">Atendimentos atendidos do dia</h4>
-                                </div>
-                                <div class="comment-widgets scrollable mb-2 common-widget" style="height: 465px"
-                                    data-simplebar="">
-                                    <!-- Comment Row -->
-                                    <div class="d-flex flex-row comment-row border-bottom p-3 gap-3">
-                                        <div>
-                                            <span><img src="{{ asset('template/assets/images/profile/user-3.jpg') }}"
-                                                    class="rounded-circle" alt="user" width="50" /></span>
-                                        </div>
-                                        <div class="comment-text w-100">
-                                            <h6 class="fw-medium">James Anderson</h6>
-                                            <p class="mb-1 fs-2 text-muted">
-                                                Lorem Ipsum is simply dummy text of the printing and
-                                                type etting industry
-                                            </p>
-                                            <div class="comment-footer mt-2">
-                                                <div class="d-flex align-items-center">
-                                                    <span
-                                                        class="
-                              badge
-                              bg-info-subtle
-                              text-info
-                              
-                            ">Pending</span>
-                                                    <span class="action-icons">
-                                                        <a href="javascript:void(0)" class="ps-3"><i
-                                                                class="ti ti-edit fs-5"></i></a>
-                                                        <a href="javascript:void(0)" class="ps-3"><i
-                                                                class="ti ti-check fs-5"></i></a>
-                                                        <a href="javascript:void(0)" class="ps-3"><i
-                                                                class="ti ti-heart fs-5"></i></a>
-                                                    </span>
+                                                    </div>
+                                                    {{ $agendamentos_dia->links() }}
+
                                                 </div>
-                                                <span
-                                                    class="
-                            text-muted
-                            ms-auto
-                            fw-normal
-                            fs-2
-                            d-block
-                            mt-2
-                            text-end
-                          ">April
-                                                    14, 2025</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Comment Row -->
-                                    <div class="d-flex flex-row comment-row border-bottom active p-3 gap-3">
-                                        <div>
-                                            <span><img src="{{ asset('template/assets/images/profile/user-5.jpg') }}"
-                                                    class="rounded-circle" alt="user" width="50" /></span>
-                                        </div>
-                                        <div class="comment-text active w-100">
-                                            <h6 class="fw-medium">Michael Jorden</h6>
-                                            <p class="mb-1 fs-2 text-muted">
-                                                Lorem Ipsum is simply dummy text of the printing and
-                                                type setting industry.
-                                            </p>
-                                            <div class="comment-footer mt-2">
-                                                <div class="d-flex align-items-center">
-                                                    <span
-                                                        class="
-                              badge
-                              bg-success-subtle
-                              text-success
-                              
-                            ">Atendido</span>
-                                                    <span class="action-icons active">
-                                                        <a href="javascript:void(0)" class="ps-3"><i
-                                                                class="ti ti-edit fs-5"></i></a>
-                                                        <a href="javascript:void(0)" class="ps-3"><i
-                                                                class="ti ti-circle-x fs-5"></i></a>
-                                                        <a href="javascript:void(0)" class="ps-3"><i
-                                                                class="ti ti-heart text-danger fs-5"></i></a>
-                                                    </span>
-                                                </div>
-                                                <span
-                                                    class="
-                            text-muted
-                            ms-auto
-                            fw-normal
-                            fs-2
-                            text-end
-                            mt-2
-                            d-block
-                          ">April
-                                                    14, 2025</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Comment Row -->
-                                    <div class="d-flex flex-row comment-row border-bottom p-3 gap-3">
-                                        <div>
-                                            <span><img src="{{ asset('template/assets/images/profile/user-6.jpg') }}"
-                                                    class="rounded-circle" alt="user" width="50" /></span>
-                                        </div>
-                                        <div class="comment-text w-100">
-                                            <h6 class="fw-medium">Johnathan Doeting</h6>
-                                            <p class="mb-1 fs-2 text-muted">
-                                                Lorem Ipsum is simply dummy text of the printing and
-                                                type setting industry.
-                                            </p>
-                                            <div class="comment-footer mt-2">
-                                                <div class="d-flex align-items-center">
-                                                    <span
-                                                        class="
-                              badge
-                              bg-danger-subtle
-                              text-danger
-                              
-                            ">Rejected</span>
-                                                    <span class="action-icons">
-                                                        <a href="javascript:void(0)" class="ps-3"><i
-                                                                class="ti ti-edit fs-5"></i></a>
-                                                        <a href="javascript:void(0)" class="ps-3"><i
-                                                                class="ti ti-check fs-5"></i></a>
-                                                        <a href="javascript:void(0)" class="ps-3"><i
-                                                                class="ti ti-heart fs-5"></i></a>
-                                                    </span>
-                                                </div>
-                                                <span
-                                                    class="
-                            text-muted
-                            ms-auto
-                            fw-normal
-                            fs-2
-                            d-block
-                            mt-2
-                            text-end
-                          ">April
-                                                    14, 2025</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Comment Row -->
-                                    <div class="d-flex flex-row comment-row p-3 gap-3">
-                                        <div>
-                                            <span><img src="{{ asset('template/assets/images/profile/user-4.jpg') }}"
-                                                    class="rounded-circle" alt="user" width="50" /></span>
-                                        </div>
-                                        <div class="comment-text w-100">
-                                            <h6 class="fw-medium">James Anderson</h6>
-                                            <p class="mb-1 fs-2 text-muted">
-                                                Lorem Ipsum is simply dummy text of the printing and
-                                                type setting industry.
-                                            </p>
-                                            <div class="comment-footer mt-2">
-                                                <div class="d-flex align-items-center">
-                                                    <span
-                                                        class="
-                              badge
-                              bg-info-subtle
-                              text-info
-                              
-                            ">Pending</span>
-                                                    <span class="action-icons">
-                                                        <a href="javascript:void(0)" class="ps-3"><i
-                                                                class="ti ti-edit fs-5"></i></a>
-                                                        <a href="javascript:void(0)" class="ps-3"><i
-                                                                class="ti ti-check fs-5"></i></a>
-                                                        <a href="javascript:void(0)" class="ps-3"><i
-                                                                class="ti ti-heart fs-5"></i></a>
-                                                    </span>
-                                                </div>
-                                                <span
-                                                    class="
-                            text-muted
-                            ms-auto
-                            fw-normal
-                            fs-2
-                            d-block
-                            text-end
-                            mt-2
-                          ">April
-                                                    14, 2025</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center">
-                                        <h4 class="card-title mb-0">Em fila de Atendimentos</h4>
-                                        <select class="form-select w-auto ms-auto">
-                                            <option selected="">hoje</option>
-                                            <option value="1">amanhã</option>
-                                        </select>
-                                    </div>
-                                    <div class="d-flex align-items-center flex-row mt-4">
-                                        <div class="p-2 display-5 text-primary">
-                                            <i class="ti ti-cloud-snow"></i>
-                                            <span>73<sup>°</sup></span>
-                                        </div>
-                                        <div class="p-2">
-                                            <h3 class="mb-0">Saturday</h3>
-                                            <small>Ahmedabad, India</small>
-                                        </div>
-                                    </div>
-                                    <table class="table table-borderless">
-                                        <tbody>
-                                            <tr>
-                                                <td>Wind</td>
-                                                <td class="fw-medium">ESE 17 mph</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Humidity</td>
-                                                <td class="fw-medium">83%</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Pressure</td>
-                                                <td class="fw-medium">28.56 in</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Cloud Cover</td>
-                                                <td class="fw-medium">78%</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Ceiling</td>
-                                                <td class="fw-medium">25760 ft</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <hr />
-                                    <ul class="list-unstyled row text-center city-weather-days mb-0">
-                                        <li class="col">
-                                            <i class="ti ti-sun-high fs-4"></i><span>09:30</span>
-                                            <h3 class="mb-0 fs-6 lh-base">70<sup>°</sup></h3>
-                                        </li>
-                                        <li class="col">
-                                            <i class="ti ti-cloud fs-4"></i><span>11:30</span>
-                                            <h3 class="mb-0 fs-6 lh-base">72<sup>°</sup></h3>
-                                        </li>
-                                        <li class="col">
-                                            <i class="ti ti-cloud-rain fs-4"></i><span>13:30</span>
-                                            <h3 class="mb-0 fs-6 lh-base">75<sup>°</sup></h3>
-                                        </li>
-                                        <li class="col">
-                                            <i class="ti ti-cloud-snow fs-4"></i><span>15:30</span>
-                                            <h3 class="mb-0 fs-6 lh-base">76<sup>°</sup></h3>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+
+                        {{-- aqui fica o rodape --}}
+                        @include('prefeito.layout.rodape')
                     </div>
-                    {{-- aqui fica o rodape --}}
-                    @include('prefeito.layout.rodape')
                 </div>
             </div>
         </div>
-    </div>
-    <script src="{{ asset('template/assets/libs/jquery/dist/jquery.min.js') }}"></script>
-    <script src="{{ asset('template/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('template/assets/js/sidebarmenu.js') }}"></script>
-    <script src="{{ asset('template/assets/js/app.min.js') }}"></script>
-    <script src="{{ asset('template/assets/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('template/assets/libs/simplebar/dist/simplebar.js') }}"></script>
-    <script src="{{ asset('template/assets/js/dashboard.js') }}"></script>
-    <!-- solar icons -->
-    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+        <script src="{{ asset('template/assets/libs/jquery/dist/jquery.min.js') }}"></script>
+        <script src="{{ asset('template/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ asset('template/assets/js/sidebarmenu.js') }}"></script>
+        <script src="{{ asset('template/assets/js/app.min.js') }}"></script>
+        <script src="{{ asset('template/assets/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
+        <script src="{{ asset('template/assets/libs/simplebar/dist/simplebar.js') }}"></script>
+        <script src="{{ asset('template/assets/js/dashboard.js') }}"></script>
+        <!-- solar icons -->
+        <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
 </body>
 
 </html>
