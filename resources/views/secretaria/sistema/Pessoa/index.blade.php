@@ -10,11 +10,12 @@
 </head>
 
 <body>
-    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6"
-        data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed">
 
         <!-- Top Bar -->
-        <div class="app-topstrip bg-dark py-3 px-3 d-flex flex-column flex-lg-row align-items-center justify-content-between">
+        <div
+            class="app-topstrip bg-dark py-3 px-3 d-flex flex-column flex-lg-row align-items-center justify-content-between">
             <h3 class="text-white mb-2 mb-lg-0 fs-5 text-center text-lg-start">
                 Prefeitura Municipal - Palmas de Monte Alto - Bahia
             </h3>
@@ -51,7 +52,8 @@
 
                         <!-- Notificações -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link" href="#" id="drop1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link" href="#" id="drop1" data-bs-toggle="dropdown"
+                                aria-expanded="false">
                                 <i class="ti ti-bell"></i>
                                 <div class="notification bg-primary rounded-circle"></div>
                             </a>
@@ -67,7 +69,8 @@
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
                             <li class="nav-item dropdown">
-                                <a class="nav-link" href="#" id="drop2" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a class="nav-link" href="#" id="drop2" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
                                     <img src="{{ asset('template/assets/images/profile/user-1.jpg') }}" alt=""
                                         width="35" height="35" class="rounded-circle">
                                 </a>
@@ -148,31 +151,32 @@
                                                         <td>{{ $pessoa->cartao_sus }}</td>
                                                         <td>{{ $pessoa->telefone }}</td>
                                                         <td>
-                                                            <a href="{{ route('pessoas.edit',['pessoa',$pessoa->id] ) }}"
-                                                               class="btn btn-warning btn-sm w-100">
-                                                               Editar
+                                                            <a href="{{ route('pessoas.edit', ['pessoa' => $pessoa->id]) }}"
+                                                                class="btn btn-warning btn-sm w-100">
+                                                                Editar
                                                             </a>
                                                         </td>
                                                         <td>
                                                             <a href="{{ route('pessoas.create') }}"
-                                                               class="btn btn-success btn-sm w-100">
-                                                               Criar
+                                                                class="btn btn-success btn-sm w-100">
+                                                                Criar
                                                             </a>
                                                         </td>
                                                         <td>
-                                                            <form action="{{ route('pessoas.destroy',['pessoa',$pessoa->id] ) }}" method="POST"
-                                                                  onsubmit="return confirm('Tem certeza que deseja eliminar esta pessoa?')">
+                                                            <form action="{{ route('pessoas.destroy', $pessoa) }}"
+                                                                method="POST"
+                                                                onsubmit="return confirm('Tem certeza que deseja eliminar esta pessoa?')">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button type="submit" class="btn btn-danger btn-sm w-100">
-                                                                    Eliminar
-                                                                </button>
+                                                                <button type="submit"
+                                                                    class="btn btn-danger btn-sm w-100">Eliminar</button>
                                                             </form>
+
                                                         </td>
                                                         <td>
                                                             <a href="{{ route('agendamentos.create', ['id' => $pessoa->id]) }}"
-                                                               class="btn btn-primary btn-sm w-100">
-                                                               Novo Agendamento
+                                                                class="btn btn-primary btn-sm w-100">
+                                                                Novo Agendamento
                                                             </a>
                                                         </td>
                                                     </tr>

@@ -20,26 +20,75 @@ use App\Http\Controllers\PessoaController;
 use App\Http\Controllers\ReAgendamentoController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\SecretariaController;
+use App\Models\Atendimento;
 
+// ROTA PÚBLICA
 Route::get('/', function () {
     return view('welcome');
 });
 
-// DASHBOARD COM VERIFICAÇÃO DE LOGIN E PAPEL DE USUÁRIO
+// ROTAS DO GRÁFICO (JSON para AJAX)
+Route::middleware('auth')->group(function() {
+    Route::get('/grafico/dados', function() {
+        $dados = Atendimento::selectRaw('DAYOFWEEK(created_at) as dia_semana, COUNT(*) as total')
+            ->groupBy('dia_semana')
+            ->orderBy('dia_semana')
+            ->get();
+
+        $dias = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+        $labels = [];
+        $totais = [];
+
+        foreach ($dados as $d) {
+            $labels[] = $dias[$d->dia_semana - 1];
+            $totais[] = $d->total;
+        }
+
+        return response()->json([
+            'labels' => $labels,
+            'totais' => $totais
+        ]);
+    })->name('grafico.dados');
+
+    Route::get('/grafico', function() {
+        return view('grafico');
+    })->name('grafico');
+
+    Route::get('/grafico/pessoas-atendidas', function () {
+        $dados = Atendimento::selectRaw('DAYOFWEEK(data_hora) as dia_semana, COUNT(*) as total')
+            ->groupBy('dia_semana')
+            ->orderBy('dia_semana')
+            ->get();
+
+        $dias = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+        $labels = [];
+        $totais = [];
+
+        foreach ($dados as $d) {
+            $labels[] = $dias[$d->dia_semana - 1];
+            $totais[] = $d->total;
+        }
+
+        return response()->json([
+            'labels' => $labels,
+            'totais' => $totais
+        ]);
+    })->name('grafico.pessoas-atendidas');
+});
+
+// DASHBOARD COM VERIFICAÇÃO DE LOGIN E TIPO DE USUÁRIO
 Route::get('/dashboard', function (Request $request) {
     if (!Auth::check()) {
-        return redirect()->route('login'); // evita erro se usuário não estiver logado
+        return redirect()->route('login');
     }
 
-    $tipo = Auth::user()->tipo_usuario;
-
-    return match ($tipo) {
-        'user'      => view('cidadao.dashboard'),
-        'gestor'    => view('prefeito.dashboard_prefeito'),
-        'cidadao'   => view('dashboard.plano_basico.pagamentoAprovado'),
-        'secretaria'=> view('secretaria.dashboardSecretaria'),
-        'adm'       => view('dashboard.plano_medio.pagamentoAprovado'),
-        default     => abort(403, 'Tipo de usuário não autorizado.'),
+    return match (Auth::user()->tipo_usuario) {
+        'user'       => view('cidadao.dashboard'),
+        'gestor'     => view('prefeito.dashboard_prefeito'),
+        'cidadao'    => view('dashboard.plano_basico.pagamentoAprovado'),
+        'secretaria' => view('secretaria.dashboardSecretaria'),
+        'adm'        => view('dashboard.plano_medio.pagamentoAprovado'),
+        default      => abort(403, 'Tipo de usuário não autorizado.'),
     };
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -48,12 +97,13 @@ Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])->name(
 
 // ROTAS PROTEGIDAS POR LOGIN
 Route::middleware('auth')->group(function () {
-    // PERFIL DO USUÁRIO
+
+    // PERFIL
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // RECURSOS PRINCIPAIS
+    // RECURSOS
     Route::resources([
         'admins'          => AdminController::class,
         'agendamentos'    => AgendamentoController::class,
@@ -68,28 +118,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/protocolo/{id}/pdf', [PDFController::class, 'gerar'])->name('protocolo.pdf');
 
     // FILA
-    Route::post('/fila/{fila}/confirmar', [FilaController::class, 'confirmarAtendimento'])
-        ->name('filas.confirmar');
-    Route::get('/adicionando-fila/{id}', [AgendamentoController::class, 'adicionandoFila'])
-        ->name('adicionando-fila');
+    Route::post('/fila/{fila}/confirmar', [FilaController::class, 'confirmarAtendimento'])->name('filas.confirmar');
+    Route::get('/adicionando-fila/{id}', [AgendamentoController::class, 'adicionandoFila'])->name('adicionando-fila');
 
     // AGENDAMENTO - ROTAS EXTRAS
-    Route::delete('/remover-agendamento/{id}', [AgendamentoController::class, 'delete'])
-        ->name('agendamentos.delete');
-    Route::delete('/remarcacao/apagada/{id}', [AgendamentoController::class, 'remarcacaoDestoy'])
-        ->name('remarcacao.delete');
-    Route::post('/remarcacao', [AgendamentoController::class, 'remarcacaoStory'])
-        ->name('remarcacao-story');
-    Route::get('/remarcação', [AgendamentoController::class, 'remarcacao'])
-        ->name('marcacao.index');
-    Route::get('/remarcacao-edit/{id}', [AgendamentoController::class, 'remarcacao_edit'])
-        ->name('remarcacao-edit');
-    Route::put('/remarcacao-update', [AgendamentoController::class, 'remarcacao_update'])
-        ->name('remarcacao.update');
+    Route::delete('/remover-agendamento/{id}', [AgendamentoController::class, 'delete'])->name('agendamentos.delete');
+    Route::delete('/remarcacao/apagada/{id}', [AgendamentoController::class, 'remarcacaoDestoy'])->name('remarcacao.delete');
+    Route::post('/remarcacao', [AgendamentoController::class, 'remarcacaoStory'])->name('remarcacao-story');
+    Route::get('/remarcacao', [AgendamentoController::class, 'remarcacao'])->name('marcacao.index');
+    Route::get('/remarcacao-edit/{id}', [AgendamentoController::class, 'remarcacao_edit'])->name('remarcacao-edit');
+    Route::put('/remarcacao-update', [AgendamentoController::class, 'remarcacao_update'])->name('remarcacao.update');
 
-    // // SECRETARIA
-    // Route::get('/secretaria/dashboard', [SecretariaController::class, 'agendamento_dia'])
-    //     ->name('dashboard.secretaria');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
