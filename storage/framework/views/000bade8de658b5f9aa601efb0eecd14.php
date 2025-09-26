@@ -4,13 +4,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@include('titulo')</title>
-    {{-- <link rel="shortcut icon" type="image/png" href="{{ asset('template/assets/images/logos/favicon.png') }}" /> --}}
-    <link rel="stylesheet" href="{{ asset('template/assets/css/styles.min.css') }}" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <!-- jQuery -->
+    <title><?php echo $__env->make('titulo', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?></title>
     
-
+    <link rel="stylesheet" href="<?php echo e(asset('template/assets/css/styles.min.css')); ?>" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -33,14 +30,7 @@
                 </h3>
                 <div class="d-flex align-items-center justify-content-center gap-2">
 
-                    {{-- <div class="dropdown d-flex">
-                        <a class="btn btn-primary d-flex align-items-center gap-1 " href="javascript:void(0)"
-                            id="drop4" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="ti ti-shopping-cart fs-5"></i>
-                            Buy Now
-                            <i class="ti ti-chevron-down fs-5"></i>
-                        </a>
-                    </div> --}}
+                    
                 </div>
             </div>
 
@@ -51,7 +41,7 @@
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
                     <a href="./index.html" class="text-nowrap logo-img">
-                        <img src="{{ asset('imagem/logo.png') }}" height="110" width="200">
+                        <img src="<?php echo e(asset('imagem/logo.png')); ?>" height="110" width="200">
                     </a>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
                         <i class="ti ti-x fs-6"></i>
@@ -59,8 +49,8 @@
                 </div>
                 <!-- Sidebar navigation-->
                 <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
-                    {{-- aqui fica o menu --}}
-                    @include('secretaria.layout_secretaria.menuSecretaria')
+                    
+                    <?php echo $__env->make('secretaria.layout_secretaria.menuSecretaria', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                 </nav>
                 <!-- End Sidebar navigation -->
             </div>
@@ -102,7 +92,7 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link " href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                     aria-expanded="false">
-                                    <img src="{{ asset('template/assets/images/profile/user-1.jpg') }}" alt=""
+                                    <img src="<?php echo e(asset('template/assets/images/profile/user-1.jpg')); ?>" alt=""
                                         width="35" height="35" class="rounded-circle">
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
@@ -123,7 +113,7 @@
                                             <i class="ti ti-list-check fs-6"></i>
                                             <p class="mb-0 fs-3">My Task</p>
                                         </a>
-                                        <a href="{{ route('logout') }}"
+                                        <a href="<?php echo e(route('logout')); ?>"
                                             class="btn btn-outline-primary mx-3 mt-2 d-block" @crsf> Sair</a>
                                     </div>
                                 </div>
@@ -161,7 +151,7 @@
                                                 <div class="card shadow-sm">
                                                     <div class="card-body">
                                                         <div class="card-body">
-                                                            <form action="{{ route('agendamentos.index') }}">
+                                                            <form action="<?php echo e(route('agendamentos.index')); ?>">
                                                                 <div class="row">
 
                                                                     <div class="col-md-6 col-sm-6">
@@ -169,7 +159,7 @@
                                                                             for="nome">Nome</label>
                                                                         <input type="text" name="nome"
                                                                             id="nome" class="form-control"
-                                                                            value="{{ $nome ?? '' }}"
+                                                                            value="<?php echo e($nome ?? ''); ?>"
                                                                             placeholder="Nome da conta" />
 
                                                                     </div>
@@ -177,7 +167,7 @@
                                                                     <div class="col-md-6 col-sm-6 mt-3 pt-4">
                                                                         <button type="submit"
                                                                             class="btn btn-info btn-sm">Pesquisar</button>
-                                                                        <a href="{{ route('agendamentos.index') }}"
+                                                                        <a href="<?php echo e(route('agendamentos.index')); ?>"
                                                                             class="btn btn-warning btn-sm">Limpar</a>
                                                                     </div>
 
@@ -187,17 +177,18 @@
                                                         </div>
 
                                                         <h5 class="card-title mb-3">Lista de Agendamentos do dia</h5>
-                                                        <a href="{{ route('agendamentos.create') }}"
+                                                        <a href="<?php echo e(route('agendamentos.create')); ?>"
                                                             class="btn btn-success btn-sm w-100 card-title mb-3">Novo
                                                             Agendamento</a>
                                                         <div class="table-responsive">
                                                             <table
                                                                 class="table table-striped table-hover align-middle">
-                                                                @if (session('sucesso_agendamento'))
+                                                                <?php if(session('sucesso_agendamento')): ?>
                                                                     <div class="alert alert-success">
-                                                                        {{ session('sucesso_agendamento') }}
+                                                                        <?php echo e(session('sucesso_agendamento')); ?>
+
                                                                     </div>
-                                                                @endif
+                                                                <?php endif; ?>
                                                                 <thead class="table-dark">
                                                                     <tr>
                                                                         <th>Nº de atendimento</th>
@@ -211,39 +202,40 @@
                                                                 </thead>
                                                                 <tbody>
 
-                                                                    @foreach ($agendamentos_dia as $agend)
+                                                                    <?php $__currentLoopData = $agendamentos_dia; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $agend): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                                         <tr>
-                                                                            <td>{{ $agend->id }}</td>
-                                                                            <td>{{ $agend->pessoa->nome }}</td>
-                                                                            <td>{{ $agend->pessoa->telefone }}</td>
-                                                                            {{-- <td>{{ \Carbon\Carbon::parse($agendamento->data)->format('d/m/Y') }}</td> --}}
-                                                                            <td>{{ \Carbon\Carbon::parse($agend->data_hora)->format('d/m/Y') }}
+                                                                            <td><?php echo e($agend->id); ?></td>
+                                                                            <td><?php echo e($agend->pessoa->nome); ?></td>
+                                                                            <td><?php echo e($agend->pessoa->telefone); ?></td>
+                                                                            
+                                                                            <td><?php echo e(\Carbon\Carbon::parse($agend->data_hora)->format('d/m/Y')); ?>
+
                                                                             </td>
-                                                                            <td>{{ $agend->hora }}</td>
-                                                                            <td> <a href="{{ route('protocolo.pdf', $agend->id) }}"
+                                                                            <td><?php echo e($agend->hora); ?></td>
+                                                                            <td> <a href="<?php echo e(route('protocolo.pdf', $agend->id)); ?>"
                                                                                     class="btn btn-danger btn-sm w-100"
                                                                                     target="_blank">
                                                                                     Gerar protocolo (PDF)
                                                                                 </a></td>
                                                                             <td>
-                                                                                <a href="{{ route('adicionando-fila', ['id' => $agend->id]) }}"
+                                                                                <a href="<?php echo e(route('adicionando-fila', ['id' => $agend->id])); ?>"
                                                                                     class="btn btn-success btn-sm w-100">
                                                                                     Fila
                                                                                 </a>
                                                                             </td>
                                                                             <td>
-                                                                                <a href="{{ route('agendamentos.edit', ['agendamento' => $agend->id]) }}"
+                                                                                <a href="<?php echo e(route('agendamentos.edit', ['agendamento' => $agend->id])); ?>"
                                                                                     class="btn btn-warning btn-sm w-100">
                                                                                     Remarcação
                                                                                 </a>
                                                                             </td>
                                                                             <td>
                                                                                 <form
-                                                                                    action="{{ route('agendamentos.destroy', $agend->id) }}"
+                                                                                    action="<?php echo e(route('agendamentos.destroy', $agend->id)); ?>"
                                                                                     method="POST"
                                                                                     style="display:inline">
-                                                                                    @csrf
-                                                                                    @method('DELETE')
+                                                                                    <?php echo csrf_field(); ?>
+                                                                                    <?php echo method_field('DELETE'); ?>
                                                                                     <button type="submit"
                                                                                         class="btn btn-danger btn-sm"
                                                                                         onclick="return confirm('Tem certeza que deseja remover este agendamento?')">
@@ -253,7 +245,7 @@
                                                                             </td>
                                                                             <!-- Formulário de exclusão -->
                                                                         </tr>
-                                                                    @endforeach
+                                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
 
                                                                 </tbody>
@@ -262,7 +254,8 @@
 
                                                         </div>
                                                     </div>
-                                                    {{ $agendamentos_dia->links() }}
+                                                    <?php echo e($agendamentos_dia->links()); ?>
+
 
                                                 </div>
                                             </div>
@@ -272,21 +265,22 @@
                             </div>
                         </div>
 
-                        {{-- aqui fica o rodape --}}
-                        @include('prefeito.layout.rodape')
+                        
+                        <?php echo $__env->make('prefeito.layout.rodape', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                     </div>
                 </div>
             </div>
         </div>
-        <script src="{{ asset('template/assets/libs/jquery/dist/jquery.min.js') }}"></script>
-        <script src="{{ asset('template/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
-        <script src="{{ asset('template/assets/js/sidebarmenu.js') }}"></script>
-        <script src="{{ asset('template/assets/js/app.min.js') }}"></script>
-        <script src="{{ asset('template/assets/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
-        <script src="{{ asset('template/assets/libs/simplebar/dist/simplebar.js') }}"></script>
-        <script src="{{ asset('template/assets/js/dashboard.js') }}"></script>
+        <script src="<?php echo e(asset('template/assets/libs/jquery/dist/jquery.min.js')); ?>"></script>
+        <script src="<?php echo e(asset('template/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js')); ?>"></script>
+        <script src="<?php echo e(asset('template/assets/js/sidebarmenu.js')); ?>"></script>
+        <script src="<?php echo e(asset('template/assets/js/app.min.js')); ?>"></script>
+        <script src="<?php echo e(asset('template/assets/libs/apexcharts/dist/apexcharts.min.js')); ?>"></script>
+        <script src="<?php echo e(asset('template/assets/libs/simplebar/dist/simplebar.js')); ?>"></script>
+        <script src="<?php echo e(asset('template/assets/js/dashboard.js')); ?>"></script>
         <!-- solar icons -->
         <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
 </body>
 
 </html>
+<?php /**PATH C:\xampp\htdocs\sistemaagendamento\resources\views/secretaria/dashboardSecretaria.blade.php ENDPATH**/ ?>

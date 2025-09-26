@@ -34,7 +34,7 @@ class PessoaController extends Controller
     public function create()
     {
         //
-        return view('pessoas.create');
+        return view('secretaria.sistema.Pessoa.create');
     }
 
     /**

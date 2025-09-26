@@ -11,6 +11,7 @@ class Pessoa extends Model
         'nome',
         'email',
         'telefone',
+        'user_id'
     ];
 
     public function agendamentos()

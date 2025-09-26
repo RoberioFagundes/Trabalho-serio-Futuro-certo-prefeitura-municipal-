@@ -1,0 +1,1 @@
+Trabalho Serio, Futuro Certo<?php /**PATH C:\xampp\htdocs\sistemaagendamento\resources\views/titulo.blade.php ENDPATH**/ ?>

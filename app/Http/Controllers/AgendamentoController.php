@@ -12,7 +12,9 @@ use App\Models\Pessoa;
 use App\Models\EnderecoCidadao;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 
+use function Laravel\Prompts\table;
 
 class AgendamentoController extends Controller
 {
@@ -42,7 +44,7 @@ class AgendamentoController extends Controller
         ]);
     }
 
-    
+
 
 
 
@@ -57,79 +59,103 @@ class AgendamentoController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        //    dd($request->all());
-        // $validated = $request->validate([
-        //     'nome' => 'required|nome'
+        // 1. Validação
+        $validated = $request->validate([
+            'nomeInput'      => 'required|string|max:255',
+            'cpfInput'       => 'required|string|max:14',
+            'telefoneInput'  => 'nullable|string|max:20',
+            'estadoInput'    => 'required|string|max:50',
+            'cidadeInput'    => 'required|string|max:100',
+            'bairroInput'    => 'required|string|max:100',
+            'ruaInput'       => 'required|string|max:255',
+            'dataInput'      => 'required|date',
+            'horaInput'      => 'required',
+            'observacaoInput' => 'required|string|max:255',
+            'arquivoInput'   => 'nullable|file|max:2048',
+        ]);
 
-        // ]);
+        $data = \Carbon\Carbon::parse($validated['dataInput']);
 
-        $pessoa = new Pessoa();
-        $pessoa->nome = $request->nomeInput;
-        $pessoa->cpf = $request->cpf;
-        $pessoa->data_nascimento = $request->data_nascimento;
-        $pessoa->telefone = $request->telefoneInput;
-        $pessoa->user_id = auth()->user()->id;
-        $pessoa->cpf = $request->cpfInput;
-        $pessoa->save();
+        // 2. Bloqueio de feriados
+        if (\DB::table('feriados')->whereDate('data', $data)->exists()) {
+            return redirect()->back()
+                ->withErrors(['dataInput' => 'Não é permitido agendar em feriados.'])
+                ->withInput();
+        }
 
-        $enderecoCidadao = new EnderecoCidadao();
-        $enderecoCidadao->estado = $request->estadoInput;
-        $enderecoCidadao->cidade = $request->cidadeInput;
-        $enderecoCidadao->bairro = $request->bairroInput;
-        $enderecoCidadao->rua = $request->ruaInput;
-        $enderecoCidadao->pessoa_id = $pessoa->id;
-        $enderecoCidadao->save();
+        // 3. Bloqueio de finais de semana
+        if ($data->isWeekend()) {
+            return redirect()->back()
+                ->withErrors(['dataInput' => 'Não é permitido agendar em sábados ou domingos.'])
+                ->withInput();
+        }
+
+        // ✅ Garante que existe usuário logado
+        if (!auth()->check()) {
+            return redirect()->route('login')
+                ->withErrors('Você precisa estar logado para cadastrar uma pessoa.');
+        }
 
 
 
+        $pessoa = Pessoa::create([
+            'nome'      => $validated['nomeInput'],
+            'cpf'       => $validated['cpfInput'],
+            'telefone'  => $validated['telefoneInput'],
+            'user_id'   => auth()->id(), // ✅ use ->id, não o objeto inteiro
+        ]);
 
+    
+
+        // 5. Cria endereço
+        EnderecoCidadao::create([
+            'estado'    => $validated['estadoInput'],
+            'cidade'    => $validated['cidadeInput'],
+            'bairro'    => $validated['bairroInput'],
+            'rua'       => $validated['ruaInput'],
+            'pessoa_id' => $pessoa->id,
+        ]);
+
+        // 6. Verifica agendamento duplicado
+        $agendamentoExistente = Agendamento::where('pessoa_id', $pessoa->id)
+            ->whereDate('data_hora', $data->toDateString())
+            ->where('hora', $validated['horaInput'])
+            ->first();
+
+        if ($agendamentoExistente) {
+            return redirect()->back()
+                ->withErrors(['dataInput' => 'Já existe um agendamento para esta pessoa neste dia e horário.'])
+                ->withInput();
+        }
+
+        // 7. Cria agendamento
         $agendamento = new Agendamento();
-        $agendamento->data_hora = $request->dataInput;
-        $agendamento->hora = $request->horaInput;
-        $agendamento->observacoes = $request->observacaoInput;
-        $agendamento->user_id = auth()->user()->id;
-        $agendamento->pessoa_id = $pessoa->id;
-        // 4. Verificar se um novo arquivo foi enviado
-        // 3. Upload de arquivo (se enviado)
+        $agendamento->data_hora  = $data->toDateString();
+        $agendamento->hora       = $validated['horaInput'];
+        $agendamento->observacoes = $validated['observacaoInput'];
+        $agendamento->user_id    = auth()->id();
+        $agendamento->pessoa_id  = $pessoa->id;
+
+        // 8. Upload do arquivo (se existir)
         if ($request->hasFile('arquivoInput')) {
             $file = $request->file('arquivoInput');
-
-            // Deleta o antigo se existir
-            if ($agendamento && $agendamento->arquivo && Storage::disk('public')->exists($agendamento->arquivo)) {
-                Storage::disk('public')->delete($agendamento->arquivo);
-            }
-
-            // Gera nome único preservando o original
             $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            $safeName = Str::slug($originalName); // remove caracteres estranhos
+            $safeName = \Illuminate\Support\Str::slug($originalName);
             $extension = $file->getClientOriginalExtension();
             $fileName = $safeName . '-' . time() . '.' . $extension;
 
-            // Salva o arquivo
             $path = $file->storeAs('uploads/agendamentos', $fileName, 'public');
-
-            // Salva o caminho e o nome original no banco
-            $dados['arquivo'] = $path;
-            $dados['arquivo_nome'] = $file->getClientOriginalName(); // nome original para exibir
-
-            $agendamento->arquivo = $fileName;
+            $agendamento->arquivo = $path; // salva caminho completo
         }
 
         $agendamento->save();
-
-        $agendamentos = Agendamento::orderBy('data_hora')->paginate(10);
-
-
-        $Pessoa = Pessoa::when(request()->has('nome'), function ($whenQuery) {
-            $whenQuery->where('nome', 'like', '%' . request()->nome . '%');
-        })->get();
-
 
         return redirect()
             ->route('agendamentos.index')
             ->with('sucesso_agendamento', 'Agendamento cadastrado com sucesso!');
     }
+
+
 
     /**
      * Display the specified resource.

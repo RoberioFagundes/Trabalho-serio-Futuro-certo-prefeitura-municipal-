@@ -1,8 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;   
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\ProfileController; 
+use Illuminate\Http\Request;
+
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
@@ -17,107 +19,77 @@ use App\Http\Controllers\PessoaAtendidaController;
 use App\Http\Controllers\PessoaController;
 use App\Http\Controllers\ReAgendamentoController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-
-use App\Models\User;
+use App\Http\Controllers\SecretariaController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-
+// DASHBOARD COM VERIFICAÇÃO DE LOGIN E PAPEL DE USUÁRIO
 Route::get('/dashboard', function (Request $request) {
-
-    //comparando se na tabela user tem coluna role verificando de existe um registro do tipo admin
-    if((auth()->user()->tipo_usuario == "user")){
-	
-		// $cliente_id={{ session('cliente_id') }};
-		// dd($cliente_id);
-
-		// Blog::latest()->limit(5)->get();
-	  
-        return view('cidadao.dashboard');
-
+    if (!Auth::check()) {
+        return redirect()->route('login'); // evita erro se usuário não estiver logado
     }
 
-    
-	if ((auth()->user()->tipo_usuario == "gestor")) {
+    $tipo = Auth::user()->tipo_usuario;
 
-	
-		return view('prefeito.dashboard_prefeito');
+    return match ($tipo) {
+        'user'      => view('cidadao.dashboard'),
+        'gestor'    => view('prefeito.dashboard_prefeito'),
+        'cidadao'   => view('dashboard.plano_basico.pagamentoAprovado'),
+        'secretaria'=> view('secretaria.dashboardSecretaria'),
+        'adm'       => view('dashboard.plano_medio.pagamentoAprovado'),
+        default     => abort(403, 'Tipo de usuário não autorizado.'),
+    };
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-	}
+// LOGOUT
+Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-     //comparando se na tabela user tem coluna role verificando de existe um registro do tipo aluno
-     if((auth()->user()->tipo_usuario == "cidadao")){
-
-        return view('dashboard.plano_basico.pagamentoAprovado');
-
-    }
-
-      //comparando se na tabela user tem coluna role verificando de existe um registro do tipo aluno
-     if((auth()->user()->tipo_usuario == "secretaria")){
-
-        return view('secretaria.dashboardSecretaria');
-
-    }
-
-     //comparando se na tabela user tem coluna role verificando de existe um registro do tipo professor
-     if(auth()->user()->tipo_usuario == "adm"){
-		
-        return view('dashboard.plano_medio.pagamentoAprovado');
-
-    }
-
-     
-   
-})->middleware(['auth', 'verified'])->middleware(['auth'])->name('dashboard');
-
-Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])          
-    ->name('logout');
-
+// ROTAS PROTEGIDAS POR LOGIN
 Route::middleware('auth')->group(function () {
+    // PERFIL DO USUÁRIO
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
-  
-    Route::resource('admins', AdminController::class)->names('admins');
 
+    // RECURSOS PRINCIPAIS
+    Route::resources([
+        'admins'          => AdminController::class,
+        'agendamentos'    => AgendamentoController::class,
+        'atendimentos'    => AtendimentoController::class,
+        'filas'           => FilaController::class,
+        'pessoaatendidas' => PessoaAtendidaController::class,
+        'pessoas'         => PessoaController::class,
+        'reagendamentos'  => ReAgendamentoController::class,
+    ]);
 
-
-    Route::resource('agendamentos', AgendamentoController::class)->names('agendamentos');
-    Route::resource('atendimentos', AtendimentoController::class)->names('atendimentos');
-    Route::resource('filas', FilaController::class)->names('filas');
-    Route::resource('pessoaatendidas', PessoaAtendidaController::class)->names('pessoaatendidas');
-    Route::resource('pessoas', PessoaController::class)->names('pessoas');
-    Route::resource('reagendamentos', ReAgendamentoController::class)->names('reagendamentos');
+    // PDF
     Route::get('/protocolo/{id}/pdf', [PDFController::class, 'gerar'])->name('protocolo.pdf');
 
+    // FILA
     Route::post('/fila/{fila}/confirmar', [FilaController::class, 'confirmarAtendimento'])
-    ->name('filas.confirmar');
+        ->name('filas.confirmar');
+    Route::get('/adicionando-fila/{id}', [AgendamentoController::class, 'adicionandoFila'])
+        ->name('adicionando-fila');
 
+    // AGENDAMENTO - ROTAS EXTRAS
+    Route::delete('/remover-agendamento/{id}', [AgendamentoController::class, 'delete'])
+        ->name('agendamentos.delete');
+    Route::delete('/remarcacao/apagada/{id}', [AgendamentoController::class, 'remarcacaoDestoy'])
+        ->name('remarcacao.delete');
+    Route::post('/remarcacao', [AgendamentoController::class, 'remarcacaoStory'])
+        ->name('remarcacao-story');
+    Route::get('/remarcação', [AgendamentoController::class, 'remarcacao'])
+        ->name('marcacao.index');
+    Route::get('/remarcacao-edit/{id}', [AgendamentoController::class, 'remarcacao_edit'])
+        ->name('remarcacao-edit');
+    Route::put('/remarcacao-update', [AgendamentoController::class, 'remarcacao_update'])
+        ->name('remarcacao.update');
 
-   
-    // Rota extra para remarcar agendamento
-    Route::put('/agendamentos/{agendamento}/remarcar', [AgendamentoController::class, 'remarcar'])
-    ->name('agendamentos.remarcar');
-
-    // Rota que pegar o agendamento do dia 
-    Route::get('/secretaria/dashboard', [SecretariaController::class, 'agendamento_dia'])->name('dashboard.secretaria');
-
-
-    Route::delete('/remover-agendamento/{id}',[AgendamentoController::class,'delete'])->name('agendamentos.delete');
-
-    Route::delete('remarcacao/apagada/{id}',[AgendamentoController::class,'remarcacaoDestoy'])->middleware(['auth'])->name('remarcacao.delete');
-    Route::post('/remarcacao',[AgendamentoController::class,'remarcacaoStory'])->middleware(['auth'])->name('remarcacao-story');
-    Route::get('remarcação',[AgendamentoController::class, 'remarcacao'])->middleware(['auth'])->name('marcacao.index');
-     Route::get('remarcacao-edit/{id}',[AgendamentoController::class, 'remarcacao_edit'])->middleware('auth')->name('remarcacao-edit');
-
-    Route::put('remarcacao-update',[AgendamentoController::class, 'remarcacao_update'])->middleware('auth')->name('remarcacao.update');
-    Route::get('/adicionando-fila/{id}', [AgendamentoController::class, 'adicionandoFila'])->middleware(['auth'])->name('adicionando-fila');
-
- 
-    
+    // // SECRETARIA
+    // Route::get('/secretaria/dashboard', [SecretariaController::class, 'agendamento_dia'])
+    //     ->name('dashboard.secretaria');
 });
 
 require __DIR__.'/auth.php';

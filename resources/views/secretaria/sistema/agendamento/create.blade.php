@@ -5,7 +5,16 @@
     @csrf
     <div class="container">
         <div class="row g-3">
-           
+            {{-- Exibe todos os erros em uma lista no topo --}}
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
             <!-- Card da Coluna 1 -->
             <div class="col-12 col-md-6">
@@ -16,31 +25,54 @@
                         <div class="mb-3">
                             <label for="nomeInput" class="form-label">Nome:</label>
                             <input type="text" name="nomeInput" class="form-control" id="nomeInput">
+                            @error('nomeInput')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
                             <label for="observacaoInput" class="form-label">Observação:</label>
                             <textarea class="form-control" name="observacaoInput" id="observacaoInput" rows="5"></textarea>
+                            @error('observacaoInput')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label for="dataInput" class="form-label">Data:</label>
-                            <input type="date" name="dataInput" class="form-control" id="dataInput">
-                        </div>
+                        <label for="dataInput" class="form-label">Data:</label>
+                        <input type="date"
+                            name="dataInput"
+                            id="dataInput"
+                            value="{{ old('dataInput') }}"
+                            class="form-control @error('dataInput') is-invalid @enderror">
+
+    {{-- Aqui será exibido o erro, seja final de semana ou feriado --}}
+  
+</div>
+
 
                         <div class="mb-3">
                             <label for="horaInput" class="form-label">Hora:</label>
                             <input type="time" name="horaInput" class="form-control" id="horaInput">
+                            @error('Hora')
+                                 <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="mb-3">
                             <label for="cpfInput" class="form-label">CPF:</label>
                             <input type="number" name="cpfInput" class="form-control" id="cpfInput">
+                            @error('cpfInput')
+                                {{ $message}}
+                            @enderror
                         </div>
 
                         <div class="mb-3">
                             <label for="telefoneInput" class="form-label">Telefone:</label>
                             <input type="number" name="telefoneInput" class="form-control" id="telefoneInput">
+                            @error('telefone')
+                                {{$message}}
+                            @enderror
                         </div>
 
                         <div class="mb-3">

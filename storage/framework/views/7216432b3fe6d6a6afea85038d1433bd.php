@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@include('titulo')</title>
-    <link rel="stylesheet" href="{{ asset('template/assets/css/styles.min.css') }}" />
+    <title><?php echo $__env->make('titulo', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?></title>
+    <link rel="stylesheet" href="<?php echo e(asset('template/assets/css/styles.min.css')); ?>" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -35,14 +35,7 @@
                 </h3>
                 <div class="d-flex align-items-center justify-content-center gap-2">
 
-                    {{-- <div class="dropdown d-flex">
-                        <a class="btn btn-primary d-flex align-items-center gap-1 " href="javascript:void(0)"
-                            id="drop4" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="ti ti-shopping-cart fs-5"></i>
-                            Buy Now
-                            <i class="ti ti-chevron-down fs-5"></i>
-                        </a>
-                    </div> --}}
+                    
                 </div>
             </div>
 
@@ -53,7 +46,7 @@
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
                     <a href="./index.html" class="text-nowrap logo-img">
-                        <img src="{{ asset('imagem/logo.png') }}" height="110" width="200">
+                        <img src="<?php echo e(asset('imagem/logo.png')); ?>" height="110" width="200">
                     </a>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
                         <i class="ti ti-x fs-6"></i>
@@ -61,8 +54,8 @@
                 </div>
                 <!-- Sidebar navigation-->
                 <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
-                    {{-- aqui fica o menu --}}
-                    @include('secretaria.layout_secretaria.menuSecretaria')
+                    
+                    <?php echo $__env->make('secretaria.layout_secretaria.menuSecretaria', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                 </nav>
                 <!-- End Sidebar navigation -->
             </div>
@@ -104,7 +97,7 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link " href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                                     aria-expanded="false">
-                                    <img src="{{ asset('template/assets/images/profile/user-1.jpg') }}" alt=""
+                                    <img src="<?php echo e(asset('template/assets/images/profile/user-1.jpg')); ?>" alt=""
                                         width="35" height="35" class="rounded-circle">
                                 </a>
 
@@ -114,10 +107,10 @@
                                     <div class="message-body">
                                         <a href="javascript:void(0)"
                                             class="d-flex align-items-center gap-2 dropdown-item">
-                                            <p class="mb-0 fs-3">{{ auth()->user()->name }}</p>
+                                            <p class="mb-0 fs-3"><?php echo e(auth()->user()->name); ?></p>
                                         </a>
 
-                                        <a href="{{ route('logout') }}"
+                                        <a href="<?php echo e(route('logout')); ?>"
                                             class="btn btn-outline-primary mx-3 mt-2 d-block" @crsf> Sair</a>
                                     </div>
                                 </div>
@@ -138,28 +131,29 @@
                                 <div class="card-body">
                                     <div class="d-md-flex align-items-center">
                                         <div>
-                                            @yield('formulario_secretaria')
+                                            <?php echo $__env->yieldContent('formulario_secretaria'); ?>
                                         </div>
 
                                     </div>
 
 
                                 </div>
-                                {{-- aqui fica o rodape --}}
+                                
                             </div>
                         </div>
                     </div>
-                    @include('prefeito.layout.rodape')
+                    <?php echo $__env->make('prefeito.layout.rodape', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                 </div>
-                <script src="{{ asset('template/assets/libs/jquery/dist/jquery.min.js') }}"></script>
-                <script src="{{ asset('template/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
-                <script src="{{ asset('template/assets/js/sidebarmenu.js') }}"></script>
-                <script src="{{ asset('template/assets/js/app.min.js') }}"></script>
-                <script src="{{ asset('template/assets/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
-                <script src="{{ asset('template/assets/libs/simplebar/dist/simplebar.js') }}"></script>
-                <script src="{{ asset('template/assets/js/dashboard.js') }}"></script>
+                <script src="<?php echo e(asset('template/assets/libs/jquery/dist/jquery.min.js')); ?>"></script>
+                <script src="<?php echo e(asset('template/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js')); ?>"></script>
+                <script src="<?php echo e(asset('template/assets/js/sidebarmenu.js')); ?>"></script>
+                <script src="<?php echo e(asset('template/assets/js/app.min.js')); ?>"></script>
+                <script src="<?php echo e(asset('template/assets/libs/apexcharts/dist/apexcharts.min.js')); ?>"></script>
+                <script src="<?php echo e(asset('template/assets/libs/simplebar/dist/simplebar.js')); ?>"></script>
+                <script src="<?php echo e(asset('template/assets/js/dashboard.js')); ?>"></script>
                 <!-- solar icons -->
                 <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
 </body>
 
 </html>
+<?php /**PATH C:\xampp\htdocs\sistemaagendamento\resources\views/secretaria/layout_secretaria/pagina_inicialSecretaria.blade.php ENDPATH**/ ?>
