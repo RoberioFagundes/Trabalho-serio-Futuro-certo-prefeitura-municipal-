@@ -117,7 +117,7 @@ class AgendamentoController extends Controller
         ]);
 
         // 6. Verifica agendamento duplicado
-        $agendamentoExistente = Agendamento::where('pessoa_id', $pessoa->id)
+        $agendamentoExistente = Agendamento::where('pessoa_id', $request->input('pessoa_id'))
             ->whereDate('data_hora', $data->toDateString())
             ->where('hora', $validated['horaInput'])
             ->first();
@@ -324,5 +324,85 @@ class AgendamentoController extends Controller
 
 
         return view('secretaria.sistema.fila.create', compact('agendamentoCidadao'));
+    }
+
+    public function create_pessoas_cadastradas(Pessoa $pessoa)
+    {
+       return view('secretaria.sistema.agendamento.create_pessoas_cadastradas', compact('pessoa'));
+    }
+
+     // Salva o agendamento
+    // Removido método duplicado store_pessoas_cadastradas
+
+    
+
+    public function store_pessoas_cadastradas(Request $request, Pessoa $pessoa)
+    {
+        // 1. Validação
+        $validated = $request->validate([
+            'dataInput'      => 'required|date',
+            'horaInput'      => 'required',
+            'observacaoInput' => 'required|string|max:255',
+            'arquivoInput'   => 'nullable|file|max:2048',
+        ]);
+
+        $data = \Carbon\Carbon::parse($validated['dataInput']);
+
+        // 2. Bloqueio de feriados
+        if (\DB::table('feriados')->whereDate('data', $data)->exists()) {
+            return redirect()->back()
+                ->withErrors(['dataInput' => 'Não é permitido agendar em feriados.'])
+                ->withInput();
+        }
+
+        // 3. Bloqueio de finais de semana
+        if ($data->isWeekend()) {
+            return redirect()->back()
+                ->withErrors(['dataInput' => 'Não é permitido agendar em sábados ou domingos.'])
+                ->withInput();
+        }
+
+        // ✅ Garante que existe usuário logado
+        if (!auth()->check()) {
+            return redirect()->route('login')
+                ->withErrors('Você precisa estar logado para cadastrar uma pessoa.');
+        }
+
+        // 6. Verifica agendamento duplicado
+        $agendamentoExistente = Agendamento::where('pessoa_id', $pessoa->id)
+            ->whereDate('data_hora', $data->toDateString())
+            ->where('hora', $validated['horaInput'])
+            ->first();
+
+        if ($agendamentoExistente) {
+            return redirect()->back()
+                ->withErrors(['dataInput' => 'Já existe um agendamento para esta pessoa neste dia e horário.'])
+                ->withInput();
+        }
+
+        // 7. Cria agendamento
+        $agendamento = new Agendamento();
+        $agendamento->data_hora  = $data->toDateString();
+        $agendamento->hora       = $validated['horaInput'];
+        $agendamento->observacoes = $validated['observacaoInput'];
+        $agendamento->user_id    = auth()->id();
+        $agendamento->pessoa_id  =$request->input('pessoa_id');
+
+        // 8. Upload do arquivo (se existir)
+        if ($request->hasFile('arquivoInput')) {
+            $file = $request->file('arquivoInput');
+            $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeName = \Illuminate\Support\Str::slug($originalName);
+            $extension = $file->getClientOriginalExtension();
+            $fileName = $safeName . '-' . time() . '.' . $extension;
+
+            $path = $file->storeAs('uploads/agendamentos', $fileName, 'public');
+            $agendamento->arquivo = $path; // salva caminho completo
+        }
+
+        $agendamento->save();
+
+
+        return redirect()->route('pessoas.index')->with('success', 'Agendamento criado com sucesso!');
     }
 }

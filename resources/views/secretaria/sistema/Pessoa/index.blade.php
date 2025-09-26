@@ -174,10 +174,11 @@
 
                                                         </td>
                                                         <td>
-                                                            <a href="{{ route('agendamentos.create', ['id' => $pessoa->id]) }}"
-                                                                class="btn btn-primary btn-sm w-100">
+                                                            <a href="{{ route('agendamentos.create.pessoas.cadastradas', $pessoa->id) }}"
+                                                                class="btn btn-primary">
                                                                 Novo Agendamento
                                                             </a>
+
                                                         </td>
                                                     </tr>
                                                 @endforeach

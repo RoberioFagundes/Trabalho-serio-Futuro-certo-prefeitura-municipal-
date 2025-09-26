@@ -117,6 +117,10 @@ Route::middleware('auth')->group(function () {
     // PDF
     Route::get('/protocolo/{id}/pdf', [PDFController::class, 'gerar'])->name('protocolo.pdf');
 
+    // para agendar pessoas que já estão cadastrada no sistema 
+    Route::get('/agendamentos/novo/{pessoa}', [AgendamentoController::class, 'create_pessoas_cadastradas'])->name('agendamentos.create.pessoas.cadastradas');
+    Route::post('/agendamentos/pessoas/cadastradas', [AgendamentoController::class, 'store_pessoas_cadastradas'])->name('agendamentos.store_pessoas_cadastradas');
+
     // FILA
     Route::post('/fila/{fila}/confirmar', [FilaController::class, 'confirmarAtendimento'])->name('filas.confirmar');
     Route::get('/adicionando-fila/{id}', [AgendamentoController::class, 'adicionandoFila'])->name('adicionando-fila');

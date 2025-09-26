@@ -54,7 +54,7 @@
                         <div class="mb-3">
                             <label for="horaInput" class="form-label">Hora:</label>
                             <input type="time" name="horaInput" class="form-control" id="horaInput">
-                            @error('Hora')
+                            @error('hora')
                                  <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
                         </div>
